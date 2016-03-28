@@ -16,7 +16,7 @@ public class ActivityLauncher extends AppCompatActivity {
     {
         super.onResume();
         Intent intent;
-        boolean userLoggedIn = true;
+        boolean userLoggedIn = false;
         if (userLoggedIn)
         {
             intent = new Intent(this, MainActivity.class);
@@ -25,6 +25,7 @@ public class ActivityLauncher extends AppCompatActivity {
         {
             intent = new Intent(this, AuthActivity.class);
         }
+//        intent = new Intent(this, NavigationFragment.class);
         startActivity(intent);
         finish();
     }

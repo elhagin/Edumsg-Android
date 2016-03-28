@@ -1,0 +1,100 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="edumsg.edumsg_android_app.RegisterFragment">
+
+    <!--<TextView-->
+        <!--android:id="@+id/textView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:text="@string/action_register"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge"/>-->
+
+    <ImageView
+        android:layout_width="223dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/logo_placeholder" />
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:hint="@string/prompt_email"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:drawableLeft="@drawable/ic_mail_24dp"
+        android:drawablePadding="4dp"/>
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:hint="@string/prompt_username"
+        android:inputType="text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:drawableLeft="@drawable/ic_account_circle_24dp"
+        android:drawablePadding="4dp" />
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:hint="@string/prompt_password"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:drawableLeft="@drawable/ic_vpn_key_24dp"
+        android:drawablePadding="4dp" />
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:hint="@string/prompt_name"
+        android:inputType="text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:drawableLeft="@drawable/ic_accessibility_24dp"
+        android:drawablePadding="4dp" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/register_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/action_register"
+        android:layout_marginBottom="80dp"
+        app:bootstrapBrand="primary"
+        app:bootstrapSize="md"
+        app:buttonMode="regular"
+        app:roundedCorners="true"
+        android:textStyle="bold" />
+
+</LinearLayout>

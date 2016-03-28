@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/replyLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:id="@+id/user_image_1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:id="@+id/reply1"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/user_image_1"
+            android:layout_toEndOf="@+id/user_image_1" />
+
+        <ImageButton
+            android:id="@+id/retweet_button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/ic_retweet_24dp"
+            android:layout_below="@id/reply1"
+            android:layout_alignLeft="@id/reply1"
+            android:background="@null"/>
+
+        <ImageButton
+            android:id="@+id/reply_button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/ic_reply_24dp"
+            android:layout_below="@id/reply1"
+            android:layout_toRightOf="@id/retweet_button_1"
+            android:background="@null"/>
+
+        <ImageButton
+            android:id="@+id/favorite_button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite_24dp"
+            android:layout_below="@id/reply1"
+            android:layout_toRightOf="@id/reply_button_1"
+            android:background="@null"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/replyLayout2"
+        android:layout_below="@id/replyLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:id="@+id/user_image_2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:id="@+id/reply2"
+            android:layout_toRightOf="@+id/user_image_2"
+            android:layout_toEndOf="@+id/user_image_2" />
+
+        <ImageButton
+            android:id="@+id/retweet_button_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/ic_retweet_24dp"
+            android:layout_below="@id/reply2"
+            android:layout_alignLeft="@id/reply2"
+            android:background="@null"/>
+
+        <ImageButton
+            android:id="@+id/reply_button_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/ic_reply_24dp"
+            android:layout_below="@id/reply2"
+            android:layout_toRightOf="@id/retweet_button_2"
+            android:background="@null"/>
+
+        <ImageButton
+            android:id="@+id/favorite_button_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite_24dp"
+            android:layout_below="@id/reply2"
+            android:layout_toRightOf="@id/reply_button_2"
+            android:background="@null"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/replyLayout3"
+        android:layout_below="@id/replyLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:id="@+id/user_image_3" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:id="@+id/reply3"
+            android:layout_toRightOf="@+id/user_image_3"
+            android:layout_toEndOf="@+id/user_image_3" />
+
+        <ImageButton
+            android:id="@+id/retweet_button_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/ic_retweet_24dp"
+            android:layout_below="@id/reply3"
+            android:layout_alignLeft="@id/reply3"
+            android:background="@null"/>
+
+        <ImageButton
+            android:id="@+id/reply_button_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/ic_reply_24dp"
+            android:layout_below="@id/reply3"
+            android:layout_toRightOf="@id/retweet_button_3"
+            android:background="@null"/>
+
+        <ImageButton
+            android:id="@+id/favorite_button_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite_24dp"
+            android:layout_below="@id/reply3"
+            android:layout_toRightOf="@id/reply_button_3"
+            android:background="@null"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/show_more_replies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show more"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/replyLayout3"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

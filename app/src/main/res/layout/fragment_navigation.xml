@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:layout_marginTop="56dp"
+    tools:context=".NavigationFragment">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:id="@+id/profile_button"
+            android:drawableTop="@drawable/ic_accessibility_24dp"
+            android:paddingTop="25dp"
+            android:text="@string/profile"/>
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:id="@+id/msgs_button"
+            android:drawableTop="@drawable/ic_mail_24dp"
+            android:paddingTop="25dp"
+            android:text="@string/messages"
+            android:layout_toRightOf="@id/profile_button"/>
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:id="@+id/lists_button"
+            android:drawableTop="@drawable/ic_sort_24dp"
+            android:paddingTop="25dp"
+            android:text="@string/lists"
+            android:layout_below="@id/profile_button"/>
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:id="@+id/settings_button"
+            android:drawableTop="@drawable/ic_settings_applications_24dp"
+            android:paddingTop="25dp"
+            android:text="@string/action_settings"
+            android:layout_below="@id/msgs_button"
+            android:layout_toRightOf="@id/lists_button"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

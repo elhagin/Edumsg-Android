@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageButton
+        android:id="@+id/btn_home"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/ic_home_24dp"
+        android:background="@null" />
+
+    <ImageButton
+        android:id="@+id/btn_search"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/ic_search_24dp"
+        android:background="@null" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/logo_placeholder" />
+
+    <ImageButton
+        android:id="@+id/btn_create"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/ic_create_24dp"
+        android:background="@null" />
+
+    <ImageButton
+        android:id="@+id/btn_nav"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_apps_24dp"
+        android:background="@null" />
+    
+</LinearLayout>
