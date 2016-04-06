@@ -25,7 +25,7 @@ public class ActivityLauncher extends AppCompatActivity {
         {
             intent = new Intent(this, AuthActivity.class);
         }
-//        intent = new Intent(this, NavigationFragment.class);
+//        intent = new Intent(this, ListsActivity.class);
         startActivity(intent);
         finish();
     }

@@ -56,7 +56,6 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
     @Bind(R.id.name) BootstrapEditText mName;
     @Bind(R.id.register_button) BootstrapButton mRegisterButton;
     @BindColor(R.color.colorPrimaryDark) int cPrimDark;
-    RequestQueue mRequestQueue;
 
     private OnFragmentInteractionListener mListener;
 
@@ -194,7 +193,7 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
                                     });
                     if (((String) responseMap.get("code")).equals("200"))
                     {
-                        login(username, password);
+                        login(username, password, loadToast);
                     }
                 }
                 catch (Exception e)
@@ -242,16 +241,13 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         ((AuthActivity) getActivity()).getVolleyRequestQueue().add(jsonObjectRequest);
     }
 
-    private void login(final String username, String password)
+    private void login(final String username, String password, final LoadToast loadToast)
     {
-        final LoadToast loadToast = new LoadToast(getContext());
-        loadToast.setText("Authenticating...");
-        loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "USER");
         jsonParams.put("method", "login");
@@ -286,6 +282,7 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
                                 intent.putExtra("name", (String) userMap.get("name"));
                                 intent.putExtra("avatar_url", (String) userMap.get("avatar_url"));
                                 intent.putExtra("bio", (String) userMap.get("bio"));
+                                intent.putExtra("userId", (int) responseMap.get("user_id"));
                                 startActivity(intent);
                                 getActivity().finish();
                             }
@@ -294,6 +291,7 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
                 }
                 catch (Exception e)
                 {
+                    loadToast.error();
                     Log.e("JSONMapper", e.getMessage());
                 }
             }
@@ -337,8 +335,8 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         ((AuthActivity) getActivity()).getVolleyRequestQueue().add(jsonObjectRequest);
     }
 

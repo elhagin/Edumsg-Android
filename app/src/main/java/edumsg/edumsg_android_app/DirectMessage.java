@@ -12,10 +12,13 @@ IN THE SOFTWARE.
 
 package edumsg.edumsg_android_app;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.sql.Timestamp;
 
 @SuppressWarnings("unused")
-public class DirectMessage {
+public class DirectMessage implements Parcelable, Comparable {
 	private Integer id;
 	private User sender;
 	private User reciever;
@@ -25,7 +28,59 @@ public class DirectMessage {
 	private String created_at;
 	private String userImgUrl;
 
-	public void setId(int id) {
+    public DirectMessage() {
+    }
+
+    public DirectMessage(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    public static final Parcelable.Creator CREATOR =
+            new Parcelable.Creator() {
+                public DirectMessage createFromParcel(Parcel in) {
+                    return new DirectMessage(in);
+                }
+
+                public DirectMessage[] newArray(int size) {
+                    return new DirectMessage[size];
+                }
+            };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeParcelable(sender, flags);
+        dest.writeParcelable(reciever, flags);
+        dest.writeString(dm_text);
+        dest.writeString(image_url);
+        boolean[] arr = new boolean[1];
+        arr[0] = read;
+        dest.writeBooleanArray(arr);
+        dest.writeString(created_at);
+        dest.writeString(userImgUrl);
+    }
+
+    public void readFromParcel(Parcel in)
+    {
+        id = in.readInt();
+        sender = in.readParcelable(null);
+        reciever = in.readParcelable(null);
+        dm_text = in.readString();
+        image_url = in.readString();
+        boolean[] arr = new boolean[1];
+        in.readBooleanArray(arr);
+        read = arr[0];
+        created_at = in.readString();
+        userImgUrl = in.readString();
+    }
+
+    public void setId(int id) {
 		this.id = id;
 	}
 
@@ -108,4 +163,22 @@ public class DirectMessage {
 	public void setUserImgUrl(String userImgUrl) {
 		this.userImgUrl = userImgUrl;
 	}
+
+
+	@Override
+	public int compareTo(Object o)
+	{
+		if (o instanceof DirectMessage)
+		{
+			DirectMessage c = (DirectMessage) o;
+			Timestamp t = Timestamp.valueOf(getCreated_at());
+			Timestamp t2 = Timestamp.valueOf(c.getCreated_at());
+			return t.compareTo(t2);
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
 }

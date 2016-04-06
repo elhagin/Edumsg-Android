@@ -14,25 +14,23 @@ package edumsg.edumsg_android_app;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.sql.Timestamp;
-
 public class User implements Parcelable {
 	private Integer id;
 	private String username;
 	private String email;
-	private String encryptedPassword;
+	private String encrypted_password;
 	private String name;
 	private String language;
 	private String country;
 	private String bio;
 	private String website;
-	private String createdAt;
-	private String avatarUrl;
+	private String created_at;
+	private String avatar_url;
 	private Boolean overlay;
-	private String linkColor;
-	private String backgroundColor;
-	private Boolean protectedTweets;
-	private String sessionId;
+	private String link_color;
+	private String background_color;
+	private Boolean protected_tweets;
+	private String session_id;
 
 	public User() {	}
 
@@ -48,13 +46,13 @@ public class User implements Parcelable {
         this.country = country;
         this.bio = bio;
         this.website = website;
-        this.createdAt = created_at;
-        this.avatarUrl = avatar_url;
+        this.created_at = created_at;
+        this.avatar_url = avatar_url;
         this.overlay = overlay;
-        this.linkColor = link_color;
-        this.backgroundColor = background_color;
-        this.protectedTweets = protected_tweets;
-        this.sessionId = session_id;
+        this.link_color = link_color;
+        this.background_color = background_color;
+        this.protected_tweets = protected_tweets;
+        this.session_id = session_id;
     }
 
     public User(Parcel in)
@@ -83,22 +81,22 @@ public class User implements Parcelable {
         dest.writeInt(id);
         dest.writeString(username);
         dest.writeString(email);
-        dest.writeString(encryptedPassword);
+        dest.writeString(encrypted_password);
         dest.writeString(name);
         dest.writeString(language);
         dest.writeString(country);
         dest.writeString(bio);
         dest.writeString(website);
-        dest.writeString(createdAt);
-        dest.writeString(avatarUrl);
+        dest.writeString(created_at);
+        dest.writeString(avatar_url);
         boolean[] arr = new boolean[1];
         arr[0] = overlay;
         dest.writeBooleanArray(arr);
-        dest.writeString(linkColor);
-        dest.writeString(backgroundColor);
-        arr[0] = protectedTweets;
+        dest.writeString(link_color);
+        dest.writeString(background_color);
+        arr[0] = protected_tweets;
         dest.writeBooleanArray(arr);
-        dest.writeString(sessionId);
+        dest.writeString(session_id);
 	}
 
 	public void readFromParcel(Parcel in)
@@ -106,23 +104,23 @@ public class User implements Parcelable {
 		id = in.readInt();
 		username = in.readString();
 		email = in.readString();
-		encryptedPassword = in.readString();
+		encrypted_password = in.readString();
 		name = in.readString();
 		language = in.readString();
 		country = in.readString();
 		bio = in.readString();
 		website = in.readString();
-		createdAt = in.readString();
-		avatarUrl = in.readString();
+		created_at = in.readString();
+		avatar_url = in.readString();
 		boolean[] arr = new boolean[1];
 		in.readBooleanArray(arr);
         overlay = arr[0];
         arr = new boolean[1];
-		linkColor = in.readString();
-		backgroundColor = in.readString();
+		link_color = in.readString();
+		background_color = in.readString();
 		in.readBooleanArray(arr);
-        protectedTweets = arr[0];
-		sessionId = in.readString();
+        protected_tweets = arr[0];
+		session_id = in.readString();
 	}
 
     public Integer getId() {
@@ -149,12 +147,12 @@ public class User implements Parcelable {
         this.email = email;
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+    public String getEncrypted_password() {
+        return encrypted_password;
     }
 
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
+    public void setEncrypted_password(String encrypted_password) {
+        this.encrypted_password = encrypted_password;
     }
 
     public String getName() {
@@ -197,20 +195,20 @@ public class User implements Parcelable {
         this.website = website;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getAvatar_url() {
+        return avatar_url;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatar_url(String avatar_url) {
+        this.avatar_url = avatar_url;
     }
 
     public Boolean getOverlay() {
@@ -221,36 +219,36 @@ public class User implements Parcelable {
         this.overlay = overlay;
     }
 
-    public String getLinkColor() {
-        return linkColor;
+    public String getLink_color() {
+        return link_color;
     }
 
-    public void setLinkColor(String linkColor) {
-        this.linkColor = linkColor;
+    public void setLink_color(String link_color) {
+        this.link_color = link_color;
     }
 
-    public String getBackgroundColor() {
-        return backgroundColor;
+    public String getBackground_color() {
+        return background_color;
     }
 
-    public void setBackgroundColor(String backgroundColor) {
-        this.backgroundColor = backgroundColor;
+    public void setBackground_color(String background_color) {
+        this.background_color = background_color;
     }
 
-    public Boolean getProtectedTweets() {
-        return protectedTweets;
+    public Boolean getProtected_tweets() {
+        return protected_tweets;
     }
 
-    public void setProtectedTweets(Boolean protectedTweets) {
-        this.protectedTweets = protectedTweets;
+    public void setProtected_tweets(Boolean protected_tweets) {
+        this.protected_tweets = protected_tweets;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public String getSession_id() {
+        return session_id;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setSession_id(String session_id) {
+        this.session_id = session_id;
     }
 
     public static Creator getCREATOR() {

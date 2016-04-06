@@ -43,9 +43,8 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 
-public class AuthActivity extends FragmentActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener
+public class AuthActivity extends MyAppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener
 {
-    RequestQueue mRequestQueue;
     MyPagerAdapter pagerAdapter;
     @Bind(R.id.pager) ViewPager mPager;
     @Bind(R.id.tab_layout) TabLayout tabLayout;
@@ -114,34 +113,6 @@ public class AuthActivity extends FragmentActivity implements LoginFragment.OnFr
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    /**
-     * Returns a Volley request queue for creating network requests
-     *
-     * @return {@link com.android.volley.RequestQueue}
-     */
-    public RequestQueue getVolleyRequestQueue()
-    {
-        if (mRequestQueue == null)
-        {
-            mRequestQueue = Volley.newRequestQueue(this);
-        }
-
-        return mRequestQueue;
-    }
-
-    /**
-     * Cancels all the request in the Volley queue for a given tag
-     *
-     * @param tag associated with the Volley requests to be cancelled
-     */
-    public void cancelAllRequests(String tag)
-    {
-        if (getVolleyRequestQueue() != null)
-        {
-            getVolleyRequestQueue().cancelAll(tag);
-        }
     }
 
     /**

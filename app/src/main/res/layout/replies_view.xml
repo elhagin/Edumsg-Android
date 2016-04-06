@@ -12,13 +12,28 @@
             android:layout_height="55dp"
             android:id="@+id/user_image_1" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/reply1_layout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:id="@+id/reply1"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/user_image_1"
-            android:layout_toEndOf="@+id/user_image_1" />
+            android:layout_toEndOf="@+id/user_image_1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/creator_info_1"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:id="@+id/reply1" />
+
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/retweet_button_1"
@@ -26,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:src="@drawable/ic_retweet_24dp"
-            android:layout_below="@id/reply1"
-            android:layout_alignLeft="@id/reply1"
+            android:layout_below="@id/reply1_layout"
+            android:layout_alignLeft="@id/reply1_layout"
             android:background="@null"/>
 
         <ImageButton
@@ -36,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:src="@drawable/ic_reply_24dp"
-            android:layout_below="@id/reply1"
+            android:layout_below="@id/reply1_layout"
             android:layout_toRightOf="@id/retweet_button_1"
             android:background="@null"/>
 
@@ -45,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_favorite_24dp"
-            android:layout_below="@id/reply1"
+            android:layout_below="@id/reply1_layout"
             android:layout_toRightOf="@id/reply_button_1"
             android:background="@null"/>
 
@@ -63,12 +78,27 @@
             android:layout_height="55dp"
             android:id="@+id/user_image_2" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/reply2_layout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:id="@+id/reply2"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/user_image_2"
-            android:layout_toEndOf="@+id/user_image_2" />
+            android:layout_toEndOf="@+id/user_image_2">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/creator_info_2"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:id="@+id/reply2" />
+
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/retweet_button_2"
@@ -76,8 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:src="@drawable/ic_retweet_24dp"
-            android:layout_below="@id/reply2"
-            android:layout_alignLeft="@id/reply2"
+            android:layout_below="@id/reply2_layout"
+            android:layout_alignLeft="@id/reply2_layout"
             android:background="@null"/>
 
         <ImageButton
@@ -86,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:src="@drawable/ic_reply_24dp"
-            android:layout_below="@id/reply2"
+            android:layout_below="@id/reply2_layout"
             android:layout_toRightOf="@id/retweet_button_2"
             android:background="@null"/>
 
@@ -95,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_favorite_24dp"
-            android:layout_below="@id/reply2"
+            android:layout_below="@id/reply2_layout"
             android:layout_toRightOf="@id/reply_button_2"
             android:background="@null"/>
 
@@ -113,12 +143,27 @@
             android:layout_height="55dp"
             android:id="@+id/user_image_3" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/reply3_layout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:id="@+id/reply3"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/user_image_3"
-            android:layout_toEndOf="@+id/user_image_3" />
+            android:layout_toEndOf="@+id/user_image_3">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/creator_info_3"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:id="@+id/reply3" />
+
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/retweet_button_3"
@@ -126,8 +171,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:src="@drawable/ic_retweet_24dp"
-            android:layout_below="@id/reply3"
-            android:layout_alignLeft="@id/reply3"
+            android:layout_below="@id/reply3_layout"
+            android:layout_alignLeft="@id/reply3_layout"
             android:background="@null"/>
 
         <ImageButton
@@ -136,7 +181,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:src="@drawable/ic_reply_24dp"
-            android:layout_below="@id/reply3"
+            android:layout_below="@id/reply3_layout"
             android:layout_toRightOf="@id/retweet_button_3"
             android:background="@null"/>
 
@@ -145,7 +190,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_favorite_24dp"
-            android:layout_below="@id/reply3"
+            android:layout_below="@id/reply3_layout"
             android:layout_toRightOf="@id/reply_button_3"
             android:background="@null"/>
     </RelativeLayout>

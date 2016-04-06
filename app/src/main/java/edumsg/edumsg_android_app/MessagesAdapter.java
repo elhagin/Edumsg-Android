@@ -1,48 +1,22 @@
 package edumsg.edumsg_android_app;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.picasso.Picasso;
 
-import net.steamcrafted.loadtoast.LoadToast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
@@ -53,6 +27,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     public class MessageViewHolder extends RecyclerView.ViewHolder
     {
         @Bind(R.id.user_image_msg) ImageView userImage;
+        @Bind(R.id.creator_info) TextView creatorInfo;
         @Bind(R.id.msg) TextView message;
 
         MessageViewHolder(View itemView) {
@@ -61,35 +36,94 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         }
     }
 
-    private List<DirectMessage> messages;
+    private List<Conversation> conversations;
     private Context context;
     private int userId;
-    @BindColor(R.color.colorPrimary) int cPrimary;
 
-    MessagesAdapter(Context context, List<DirectMessage> messages, int userId)
+    MessagesAdapter(Context context, List<Conversation> conversations, int userId)
     {
         this.context = context;
-        this.messages = messages;
+        this.conversations = conversations;
         this.userId = userId;
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return conversations.size();
     }
 
     @Override
     public void onBindViewHolder(final MessageViewHolder holder, final int position) {
-        final DirectMessage message = messages.get(position);
-        Picasso.with(context).load(message.getUserImgUrl())
+        final Conversation conv = conversations.get(position);
+        String info = "";
+        String imageUrl = "";
+        final DirectMessage lastDm = conv.getLastDM();
+        if (lastDm.getReciever().getId() == userId) {
+            info = context.getString(R.string.user_info, lastDm.getSender().getName(),
+                    lastDm.getSender().getUsername());
+            imageUrl = lastDm.getSender().getAvatar_url();
+        }
+        else
+        {
+            info = context.getString(R.string.user_info, lastDm.getReciever().getName(),
+                    lastDm.getReciever().getUsername());
+            imageUrl = lastDm.getReciever().getAvatar_url();
+        }
+        Picasso.with(context).load(imageUrl)
                 .placeholder(R.mipmap.ic_launcher).fit()
                 .into(holder.userImage);
-        holder.message.setText(message.getDm_text());
+        holder.creatorInfo.setText(info);
+        holder.userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyAppCompatActivity main = (MyAppCompatActivity) context;
+                Intent intent = new Intent(main, ProfileActivity.class);
+                intent.putExtra("username", main.getUsername());
+                intent.putExtra("name", main.getName());
+                intent.putExtra("avatar_url", main.getAvatarUrl());
+                intent.putExtra("bio", main.getBio());
+                intent.putExtra("creatorId",
+                        lastDm.getReciever().getId() == userId ? lastDm.getSender().getId()
+                                : lastDm.getReciever().getId());
+                intent.putExtra("userId", main.getUserId());
+                main.startActivity(intent);
+            }
+        });
+        holder.message.setText(lastDm.getDm_text());
+        holder.message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyAppCompatActivity main = (MyAppCompatActivity) context;
+                FragmentManager fragmentManager = main.getSupportFragmentManager();
+                ConversationFragment conversationFragment = new ConversationFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("convId", conv.getId());
+                bundle.putInt("userId", userId);
+                conversationFragment.setArguments(bundle);
+                fragmentManager.beginTransaction()
+                        .add(android.R.id.content, conversationFragment).addToBackStack("conv")
+                        .commit();
+            }
+        });
+        holder.creatorInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyAppCompatActivity main = (MyAppCompatActivity) context;
+                FragmentManager fragmentManager = main.getSupportFragmentManager();
+                ConversationFragment conversationFragment = new ConversationFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("convId", conv.getId());
+                conversationFragment.setArguments(bundle);
+                fragmentManager.beginTransaction()
+                        .add(android.R.id.content, conversationFragment).addToBackStack("conv")
+                        .commit();
+            }
+        });
     }
 
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.conversation_view, parent, false);
         MessageViewHolder messageViewHolder = new MessageViewHolder(view);
         return messageViewHolder;
     }

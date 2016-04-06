@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -26,9 +23,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -44,7 +41,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +82,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         @Bind(R.id.retweet_button_3) ImageButton retweetBtn3;
         @Bind(R.id.favorite_button_3) ImageButton favoriteBtn3;
         @Bind(R.id.show_more_replies) Button showMoreBtn;
+        @Bind(R.id.creator_info) TextView creatorInfo;
 
         TweetViewHolder(View itemView) {
             super(itemView);
@@ -120,8 +117,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         holder.userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (context instanceof MainActivity) {
-                    MainActivity main = (MainActivity) context;
+                    MyAppCompatActivity main = (MyAppCompatActivity) context;
                     Intent intent = new Intent(main, ProfileActivity.class);
                     intent.putExtra("username", main.getUsername());
                     intent.putExtra("name", main.getName());
@@ -130,9 +126,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                     intent.putExtra("creatorId", tweetObject.getCreator().getId());
                     intent.putExtra("userId", main.getUserId());
                     main.startActivity(intent);
-                }
             }
         });
+        String info = context.getString(R.string.user_info, tweetObject.getCreator().getName(),
+                tweetObject.getCreator().getUsername());
+        holder.creatorInfo.setText(info);
         holder.tweet.setText(tweetObject.getTweet());
         holder.replyBtn.setColorFilter(Color.rgb(128, 128, 128));
         setButtonColors(tweetObject, holder.retweetBtn, holder.favoriteBtn);
@@ -225,15 +223,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         holder.tweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Tweet> replies = tweetObject.getReplies();
                 if (holder.repliesLayout.getVisibility() == View.VISIBLE) {
                     holder.repliesLayout.setVisibility(View.GONE);
                 } else {
-                    AppCompatActivity main;
-                    if (context instanceof MainActivity)
-                        main = (MainActivity) context;
-                    else
-                        main = (ProfileActivity) context;
+                    MyAppCompatActivity main = (MyAppCompatActivity) context;
                     Map<String, String> jsonParams = new HashMap<>();
                     jsonParams.put("queue", "TWEET");
                     jsonParams.put("method", "get_earliest_replies");
@@ -257,7 +250,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                     if (!replies.isEmpty()) {
                                         Tweet firstReply = replies.get(0);
                                         holder.reply1.setText(firstReply.getTweet());
-                                        Picasso.with(context).load(firstReply.getCreator().getAvatarUrl())
+                                        Picasso.with(context).load(firstReply.getCreator().getAvatar_url())
                                                 .placeholder(R.mipmap.ic_launcher).fit()
                                                 .into(holder.replyUserImg1);
                                         holder.replyBtn1.setColorFilter(Color.rgb(128, 128, 128));
@@ -266,7 +259,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                         if (replies.size() > 1) {
                                             Tweet secondReply = replies.get(1);
                                             holder.reply2.setText(secondReply.getTweet());
-                                            Picasso.with(context).load(secondReply.getCreator().getAvatarUrl())
+                                            Picasso.with(context).load(secondReply.getCreator().getAvatar_url())
                                                     .placeholder(R.mipmap.ic_launcher).fit()
                                                     .into(holder.replyUserImg2);
                                             holder.replyBtn2.setColorFilter(Color.rgb(128, 128, 128));
@@ -276,7 +269,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                         if (replies.size() > 2) {
                                             Tweet thirdReply = replies.get(2);
                                             holder.reply3.setText(thirdReply.getTweet());
-                                            Picasso.with(context).load(thirdReply.getCreator().getAvatarUrl())
+                                            Picasso.with(context).load(thirdReply.getCreator().getAvatar_url())
                                                     .placeholder(R.mipmap.ic_launcher).fit()
                                                     .into(holder.replyUserImg3);
                                             holder.replyBtn3.setColorFilter(Color.rgb(128, 128, 128));
@@ -325,10 +318,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                         ;
                     };
                     jsonObjectRequest.setTag("Request");
-                    if (main instanceof MainActivity)
-                        ((MainActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
-                    else
-                        ((ProfileActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
+                    main.getVolleyRequestQueue().add(jsonObjectRequest);
                     holder.repliesProgress.setVisibility(View.VISIBLE);
                 }
             }
@@ -667,11 +657,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         holder.showMoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCompatActivity main;
-                if (context instanceof MainActivity)
-                    main = (MainActivity) context;
-                else
-                    main = (ProfileActivity) context;
+                MyAppCompatActivity main = (MyAppCompatActivity) context;
                 FragmentManager fragmentManager = main.getSupportFragmentManager();
                 MainActivityFragment mainActivityFragment = new MainActivityFragment();
                 Bundle bundle = new Bundle();
@@ -699,11 +685,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
 
     private void retweet(int tweetId)
     {
-        AppCompatActivity main;
-        if (context instanceof MainActivity)
-            main = (MainActivity) context;
-        else
-            main = (ProfileActivity) context;
+        MyAppCompatActivity main = (MyAppCompatActivity) context;
 //        final LoadToast loadToast = new LoadToast(main);
 //        loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
@@ -774,22 +756,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest.setTag("Request");
-        if (main instanceof MainActivity)
-            ((MainActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
-        else
-            ((ProfileActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
+        main.getVolleyRequestQueue().add(jsonObjectRequest);
     }
 
     private void unretweet(int tweetId)
     {
-        AppCompatActivity main;
-        if (context instanceof MainActivity)
-            main = (MainActivity) context;
-        else
-            main = (ProfileActivity) context;
+        MyAppCompatActivity main = (MyAppCompatActivity) context;
 //        final LoadToast loadToast = new LoadToast(main);
 //        loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
@@ -863,20 +838,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
 //        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
 //                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest.setTag("Request");
-        if (main instanceof MainActivity)
-            ((MainActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
-        else
-            ((ProfileActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
+        main.getVolleyRequestQueue().add(jsonObjectRequest);
     }
 
     private void reply(int tweetId, String tweet)
     {
-        AppCompatActivity main;
-        if (context instanceof MainActivity)
-            main = (MainActivity) context;
-        else
-            main = (ProfileActivity) context;
+        MyAppCompatActivity main = (MyAppCompatActivity) context;
         final LoadToast loadToast = new LoadToast(main);
+        final float scale = main.getApplicationContext().getResources().getDisplayMetrics().density;
+        int pixels = (int) (56 * scale + 0.5f);
+        loadToast.setTranslationY(pixels);
         loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "TWEET");
@@ -947,22 +918,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest.setTag("Request");
-        if (main instanceof MainActivity)
-            ((MainActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
-        else
-            ((ProfileActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
+        main.getVolleyRequestQueue().add(jsonObjectRequest);
     }
 
     private void favorite(int tweetId)
     {
-        AppCompatActivity main;
-        if (context instanceof MainActivity)
-            main = (MainActivity) context;
-        else
-            main = (ProfileActivity) context;
+        MyAppCompatActivity main = (MyAppCompatActivity) context;
 
 //        final LoadToast loadToast = new LoadToast(main);
 //        loadToast.show();
@@ -1034,22 +998,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest.setTag("Request");
-        if (main instanceof MainActivity)
-            ((MainActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
-        else
-            ((ProfileActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
+        main.getVolleyRequestQueue().add(jsonObjectRequest);
     }
 
     private void unfavorite(int tweetId)
     {
-        AppCompatActivity main;
-        if (context instanceof MainActivity)
-            main = (MainActivity) context;
-        else
-            main = (ProfileActivity) context;
+        MyAppCompatActivity main = (MyAppCompatActivity) context;
 //        final LoadToast loadToast = new LoadToast(main);
 //        loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
@@ -1120,13 +1077,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest.setTag("Request");
-        if (main instanceof MainActivity)
-            ((MainActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
-        else
-            ((ProfileActivity) main).getVolleyRequestQueue().add(jsonObjectRequest);
+        main.getVolleyRequestQueue().add(jsonObjectRequest);
     }
 
     private ArrayList<Tweet> getEarliestReplies(ArrayList repliesMap)
@@ -1151,7 +1105,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
             creator.setId(creatorId);
             creator.setUsername(creatorUsername);
             creator.setName(creatorName);
-            creator.setAvatarUrl(avatarUrl);
+            creator.setAvatar_url(avatarUrl);
             Tweet reply1 = new Tweet(replyId, creator, tweetText);
             reply1.setIsFavorited((boolean) tweetJsonObj.get("is_favorited"));
             reply1.setIsRetweeted((boolean) tweetJsonObj.get("is_retweeted"));
@@ -1173,7 +1127,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 creator2.setId(creatorId2);
                 creator2.setUsername(creatorUsername2);
                 creator2.setName(creatorName2);
-                creator2.setAvatarUrl(avatarUrl2);
+                creator2.setAvatar_url(avatarUrl2);
                 Tweet reply2 = new Tweet(replyId2, creator2, tweetText2);
                 reply2.setIsFavorited((boolean) tweetJsonObj2.get("is_favorited"));
                 reply2.setIsRetweeted((boolean) tweetJsonObj2.get("is_retweeted"));
@@ -1196,7 +1150,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 creator3.setId(creatorId3);
                 creator3.setUsername(creatorUsername3);
                 creator3.setName(creatorName3);
-                creator3.setAvatarUrl(avatarUrl3);
+                creator3.setAvatar_url(avatarUrl3);
                 Tweet reply3 = new Tweet(replyId3, creator3, tweetText3);
                 reply3.setIsFavorited((boolean) tweetJsonObj3.get("is_favorited"));
                 reply3.setIsRetweeted((boolean) tweetJsonObj3.get("is_retweeted"));

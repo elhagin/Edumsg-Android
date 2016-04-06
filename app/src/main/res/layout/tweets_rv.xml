@@ -7,13 +7,28 @@
         android:layout_height="70dp"
         android:id="@+id/user_image" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:id="@+id/tweet"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/tweet_layout"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/user_image"
-        android:layout_toEndOf="@+id/user_image" />
+        android:layout_toEndOf="@+id/user_image">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/creator_info"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:id="@+id/tweet" />
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/retweet_button"
@@ -21,8 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="40dp"
         android:src="@drawable/ic_retweet_24dp"
-        android:layout_below="@id/tweet"
-        android:layout_alignLeft="@id/tweet"
+        android:layout_below="@id/tweet_layout"
+        android:layout_alignLeft="@id/tweet_layout"
         android:background="@null"/>
 
     <ImageButton
@@ -31,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="40dp"
         android:src="@drawable/ic_reply_24dp"
-        android:layout_below="@id/tweet"
+        android:layout_below="@id/tweet_layout"
         android:layout_toRightOf="@id/retweet_button"
         android:background="@null"/>
 
@@ -40,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_favorite_24dp"
-        android:layout_below="@id/tweet"
+        android:layout_below="@id/tweet_layout"
         android:layout_toRightOf="@id/reply_button"
         android:background="@null"/>
 
@@ -58,6 +73,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_below="@id/retweet_button"
-        android:layout_alignStart="@id/tweet"
-        android:layout_alignLeft="@id/tweet"/>
+        android:layout_alignStart="@id/tweet_layout"
+        android:layout_alignLeft="@id/tweet_layout"/>
 </RelativeLayout>

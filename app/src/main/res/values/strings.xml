@@ -122,5 +122,24 @@
     <string name="profile">Profile</string>
     <string name="lists">Lists</string>
     <string name="messages">Direct Messages</string>
+    <string name="logout">Logout</string>
+    <string name="user_info">%1$s (@%2$s)</string>
+    <string name="list_creator">List created by %1$s (@%2$s)</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="protected_tweets">Protected Tweets</string>
+    <string name="prompt_language">Language</string>
+    <string name="prompt_country">Country</string>
+    <string name="prompt_website">Website</string>
+    <string name="prompt_avatar_url">Avatar URL</string>
+    <string name="prompt_overlay">Overlay</string>
+    <string name="prompt_link_color">Link Color</string>
+    <string name="prompt_background_color">Background Color</string>
+    <string name="alert_message_delete_conversation">Delete conversation?</string>
+    <string name="alert_button_delete_my_devices">For Me</string>
+    <string name="alert_button_delete_all_participants">From All</string>
+    <string name="time_format">%1$s:%2$s</string>
+    <string name="send_message">Send Message</string>
 </resources>
 

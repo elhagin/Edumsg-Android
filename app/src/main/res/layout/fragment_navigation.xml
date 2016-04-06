@@ -43,10 +43,10 @@
         <Button
             android:layout_width="125dp"
             android:layout_height="125dp"
-            android:id="@+id/settings_button"
-            android:drawableTop="@drawable/ic_settings_applications_24dp"
+            android:id="@+id/logout_button"
+            android:drawableTop="@drawable/ic_logout_24dp"
             android:paddingTop="25dp"
-            android:text="@string/action_settings"
+            android:text="@string/logout"
             android:layout_below="@id/msgs_button"
             android:layout_toRightOf="@id/lists_button"/>
 

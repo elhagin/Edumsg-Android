@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:layout_marginTop="56dp"
+    android:orientation="vertical"
+    android:weightSum="1.0"
+    tools:context="edumsg.edumsg_android_app.ConversationFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/conv_recycler_view"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.9"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="0.1">
+
+        <EditText
+            android:id="@+id/chat_edit_text1"
+            android:layout_width="340dp"
+            android:layout_height="50dp"
+            android:scrollHorizontally="false"
+            android:hint="@string/send_message"
+            android:maxLines="4"
+            android:singleLine="false"
+            android:inputType="textCapSentences"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/enter_chat1"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="13dp"
+            android:paddingStart="13dp"
+            android:paddingRight="17dp"
+            android:paddingEnd="17dp"
+            android:src="@drawable/ic_chat_send"
+            android:layout_toRightOf="@id/chat_edit_text1"
+            android:layout_alignBottom="@id/chat_edit_text1"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

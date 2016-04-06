@@ -1,17 +1,12 @@
 package edumsg.edumsg_android_app;
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,16 +18,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.picasso.Picasso;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import net.steamcrafted.loadtoast.LoadToast;
@@ -46,16 +38,12 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends MyAppCompatActivity {
 
-    public static final String requestUrl = "http://10.0.3.2:8080/";
-    private RequestQueue mRequestQueue;
-    private static final String TAG = "Request";
     private List<Tweet> tweetObjects;
     private RVAdapter rvAdapter;
     private ArrayList retweets;
@@ -139,6 +127,13 @@ public class MainActivity extends MyAppCompatActivity {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
+                List<Fragment> fragments = fragmentManager.getFragments();
+                if (fragments != null) {
+                    for (Fragment fragment : fragments) {
+                        if (fragment instanceof NavigationFragment)
+                            return;
+                    }
+                }
                 NavigationFragment navigationFragment = new NavigationFragment();
 //                Bundle bundle = new Bundle();
 //                bundle.putInt("userId", userId);
@@ -151,7 +146,7 @@ public class MainActivity extends MyAppCompatActivity {
 //                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
 //                intent.putExtra("username", getUsername());
 //                intent.putExtra("name", getName());
-//                intent.putExtra("avatar_url", getAvatarUrl());
+//                intent.putExtra("avatar_url", getAvatar_url());
 //                intent.putExtra("bio", getBio());
 //                intent.putExtra("creatorId", getUserId());
 //                intent.putExtra("userId", getUserId());
@@ -197,6 +192,9 @@ public class MainActivity extends MyAppCompatActivity {
     private void getFeed()
     {
         final LoadToast loadToast = new LoadToast(this);
+        final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+        int pixels = (int) (56 * scale + 0.5f);
+        loadToast.setTranslationY(pixels);
         if (!swipeRefreshLayout.isRefreshing())
         {
             loadToast.setText("Loading...");
@@ -270,13 +268,17 @@ public class MainActivity extends MyAppCompatActivity {
                                                     String avatarUrl = (String) creatorMap.get("avatar_url");
                                                     User creator = new User();
                                                     creator.setId(creatorId);
-                                                    creator.setAvatarUrl(avatarUrl);
+                                                    creator.setName((String) creatorMap.get("name"));
+                                                    creator.setUsername((String) creatorMap.get("username"));
+                                                    creator.setAvatar_url(avatarUrl);
                                                     final LinkedHashMap retweeterMap = (LinkedHashMap) tweetJsonObj.get("retweeter");
                                                     final Tweet tweetObject = new Tweet(tweetId, creator, tweetText);
                                                     if (retweeterMap != null)
                                                     {
                                                         User retweeter = new User();
                                                         retweeter.setId((int) retweeterMap.get("id"));
+                                                        retweeter.setName((String) retweeterMap.get("name"));
+                                                        retweeter.setUsername((String) retweeterMap.get("username"));
                                                         tweetObject.setRetweeter(retweeter);
                                                     }
                                                     if (avatarUrl != null && !avatarUrl.equals(""))
@@ -302,15 +304,20 @@ public class MainActivity extends MyAppCompatActivity {
                                                     }
                                                     tweetObjects.add(tweetObject);
                                                 }
-                                                rvAdapter.notifyDataSetChanged();
                                                 if (swipeRefreshLayout.isRefreshing())
                                                 {
+                                                    rvAdapter.notifyDataSetChanged();
                                                     swipeRefreshLayout.setRefreshing(false);
+                                                }
+                                                else
+                                                {
+                                                    rvAdapter.notifyItemRangeInserted(0, tweetObjects.size());
                                                 }
                                             }
                                         }
                                         catch (Exception e)
                                         {
+                                            loadToast.error();
                                             e.printStackTrace();
                                         }
                                     }
@@ -330,10 +337,13 @@ public class MainActivity extends MyAppCompatActivity {
                                     };
                                 };
                                 jsonObjectRequest4.setTag(TAG);
+                                jsonObjectRequest4.setRetryPolicy(new DefaultRetryPolicy(10000,
+                                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                                 getVolleyRequestQueue().add(jsonObjectRequest4);
                             }
                             catch (Exception e)
                             {
+                                loadToast.error();
                                 e.printStackTrace();
                             }
                         }
@@ -353,10 +363,13 @@ public class MainActivity extends MyAppCompatActivity {
                         };
                     };
                     jsonObjectRequest3.setTag(TAG);
+                    jsonObjectRequest3.setRetryPolicy(new DefaultRetryPolicy(10000,
+                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                     getVolleyRequestQueue().add(jsonObjectRequest3);
                 }
                 catch (Exception e)
                 {
+                    loadToast.error();
                     e.printStackTrace();
                 }
             }
@@ -376,6 +389,8 @@ public class MainActivity extends MyAppCompatActivity {
             };
         };
         jsonObjectRequest2.setTag(TAG);
+        jsonObjectRequest2.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         getVolleyRequestQueue().add(jsonObjectRequest2);
     }
 
@@ -482,11 +497,14 @@ public class MainActivity extends MyAppCompatActivity {
     private void createTweet(final String tweet)
     {
         final LoadToast loadToast = new LoadToast(this);
+        final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+        int pixels = (int) (56 * scale + 0.5f);
+        loadToast.setTranslationY(pixels);
         loadToast.setText("Tweeting...");
         loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "TWEET");
-        jsonParams.put("method", "message");
+        jsonParams.put("method", "tweet");
         jsonParams.put("tweet_text", tweet);
         jsonParams.put("creator_id", userId+"");
         JSONObject jsonRequest = new JSONObject(jsonParams);
@@ -507,6 +525,7 @@ public class MainActivity extends MyAppCompatActivity {
                 }
                 catch (Exception e)
                 {
+                    loadToast.error();
                     Log.e("JSONMapper", e.getMessage());
                 }
             }
@@ -535,6 +554,7 @@ public class MainActivity extends MyAppCompatActivity {
                     }
                     catch (JSONException e)
                     {
+                        loadToast.error();
                         Log.e("Response Error Msg", e.getMessage());
                     }
                 }
@@ -551,122 +571,10 @@ public class MainActivity extends MyAppCompatActivity {
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest.setTag(TAG);
         getVolleyRequestQueue().add(jsonObjectRequest);
-    }
-
-    private void logout() {
-        final LoadToast loadToast = new LoadToast(this);
-        loadToast.setText("Signing out...");
-        loadToast.show();
-        Map<String, String> jsonParams = new HashMap<>();
-        jsonParams.put("queue", "USER");
-        jsonParams.put("method", "logout");
-        jsonParams.put("user_id", userId + "");
-        JSONObject jsonRequest = new JSONObject(jsonParams);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-                requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(final JSONObject response) {
-                final ObjectMapper mapper = new ObjectMapper();
-                try {
-                    final Map<String, Object> responseMap = mapper
-                            .readValue(response.toString(),
-                                    new TypeReference<HashMap<String, Object>>() {
-                                    });
-                    if (responseMap.get("code").equals("200")) {
-                        loadToast.success();
-                        Intent intent = new Intent(MainActivity.this, AuthActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    }
-                } catch (Exception e) {
-                    Log.e("JSONMapper", e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                loadToast.error();
-                if (volleyError.networkResponse != null
-                        && volleyError.networkResponse.data != null
-                        && volleyError.networkResponse.statusCode == 400) {
-                    try {
-                        String errorJson = new String(volleyError.networkResponse.data);
-                        JSONObject errorObj = new JSONObject(errorJson);
-                        String error = errorObj.getString("message");
-                        Log.e("Error from server", error);
-//                        if (error.toLowerCase().contains("username"))
-//                        {
-//                            mUsername.setError(error);
-//                            mUsername.requestFocus();
-//                        }
-//                        if (error.toLowerCase().contains("password")) {
-//                            mPassword.setError(error);
-//                            mPassword.requestFocus();
-//                        }
-                    } catch (JSONException e) {
-                        Log.e("Response Error Msg", e.getMessage());
-                    }
-                } else {
-                    Log.e("Volley", volleyError.toString());
-                }
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json; charset=utf-8");
-                //headers.put("User-agent", System.getProperty("http.agent"));
-                return headers;
-            }
-
-            ;
-        };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        jsonObjectRequest.setTag(TAG);
-        getVolleyRequestQueue().add(jsonObjectRequest);
-    }
-
-    private void launchMessages()
-    {
-        Intent intent = new Intent(MainActivity.this, MessagesActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("userId", userId);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Returns a Volley request queue for creating network requests
-     *
-     * @return {@link com.android.volley.RequestQueue}
-     */
-    public RequestQueue getVolleyRequestQueue()
-    {
-        if (mRequestQueue == null)
-        {
-            mRequestQueue = Volley.newRequestQueue(this);
-        }
-
-        return mRequestQueue;
-    }
-
-    /**
-     * Cancels all the request in the Volley queue for a given tag
-     *
-     * @param tag associated with the Volley requests to be cancelled
-     */
-    public void cancelAllRequests(String tag)
-    {
-        if (getVolleyRequestQueue() != null)
-        {
-            getVolleyRequestQueue().cancelAll(tag);
-        }
     }
 
     public ArrayList getRetweets() {

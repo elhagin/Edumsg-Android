@@ -46,4 +46,28 @@ public class List {
 	public void setCreatedAt(Timestamp created_at) {
 		this.created_at = created_at.toString();
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public User getCreator() {
+		return creator;
+	}
+
+	public Boolean getIs_private() {
+		return is_private;
+	}
+
+	public String getCreated_at() {
+		return created_at;
+	}
 }

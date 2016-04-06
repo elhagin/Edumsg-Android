@@ -6,7 +6,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "edumsg.edumsg_android_app"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -38,6 +38,9 @@ dependencies {
             [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.1']
     )
     compile project(':volley')
+    //    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+//    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
+//    compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.beardedhen:androidbootstrap:2.0.1'
     compile 'com.android.support:support-v4:23.2.0'
@@ -45,7 +48,5 @@ dependencies {
     compile 'com.yqritc:recyclerview-flexibledivider:1.2.9'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'net.steamcrafted:load-toast:1.0.10'
-//    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-//    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
-//    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'com.android.support:recyclerview-v7:23.2.0'
 }

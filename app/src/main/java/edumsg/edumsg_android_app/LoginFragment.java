@@ -51,7 +51,6 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
 
     @Bind(R.id.username) BootstrapEditText mUsername;
     @Bind(R.id.password) BootstrapEditText mPassword;
-    RequestQueue mRequestQueue;
     @Bind(R.id.login_button) BootstrapButton mLoginButton;
     @BindColor(R.color.colorPrimaryDark) int cPrimDark;
 
@@ -180,7 +179,7 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
                                 intent.putExtra("name", (String) userMap.get("name"));
                                 intent.putExtra("avatar_url", (String) userMap.get("avatar_url"));
                                 intent.putExtra("bio", (String) userMap.get("bio"));
-                                intent.putExtra("userId", (int) userMap.get("id"));
+                                intent.putExtra("userId", (int) responseMap.get("user_id"));
                                 startActivity(intent);
                                 getActivity().finish();
                             }
@@ -189,6 +188,7 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
                 }
                 catch (Exception e)
                 {
+                    loadToast.error();
                     Log.e("JSONMapper", e.getMessage());
                 }
             }
@@ -216,10 +216,12 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
                     }
                     catch (JSONException e)
                     {
+                        loadToast.error();
                         Log.e("Response Error Msg", e.getMessage());
                     }
                 }
                 else {
+                    loadToast.error();
                     Log.e("Volley", volleyError.toString());
                 }
             }
@@ -232,8 +234,8 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         ((AuthActivity) getActivity()).getVolleyRequestQueue().add(jsonObjectRequest);
     }
 

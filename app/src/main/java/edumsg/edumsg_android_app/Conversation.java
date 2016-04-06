@@ -12,23 +12,52 @@ IN THE SOFTWARE.
 
 package edumsg.edumsg_android_app;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 @SuppressWarnings("unused")
-public class Conversation {
+public class Conversation implements Comparable {
 	private ArrayList<DirectMessage> dms;
 	private Integer id;
 	private DirectMessage lastDM;
 
-	public void setDms(ArrayList<DirectMessage> dms) {
-		this.dms = dms;
-	}
+    public ArrayList<DirectMessage> getDms() {
+        return dms;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setDms(ArrayList<DirectMessage> dms) {
+        this.dms = dms;
+    }
 
-	public void setLastDM(DirectMessage lastDM) {
-		this.lastDM = lastDM;
-	}
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public DirectMessage getLastDM() {
+        return lastDM;
+    }
+
+    public void setLastDM(DirectMessage lastDM) {
+        this.lastDM = lastDM;
+    }
+
+    @Override
+    public int compareTo(Object o)
+    {
+        if (o instanceof Conversation)
+        {
+            Conversation c = (Conversation) o;
+            Timestamp t = Timestamp.valueOf(lastDM.getCreated_at());
+            Timestamp t2 = Timestamp.valueOf(c.getLastDM().getCreated_at());
+            return t2.compareTo(t);
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }

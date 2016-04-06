@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:id="@+id/user_image_msg" />
-
+        android:id="@+id/user_img"/>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:id="@+id/msg"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/user_image_msg"
-        android:layout_toEndOf="@+id/user_image_msg" />
+        android:layout_height="wrap_content"
+        android:id="@+id/message"
+        android:layout_toRightOf="@id/user_img"/>
 
 </RelativeLayout>

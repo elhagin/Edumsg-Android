@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +74,9 @@ public class MainActivityFragment extends Fragment {
     {
         final MainActivity main = (MainActivity) getActivity();
         final LoadToast loadToast = new LoadToast(getContext());
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+        int pixels = (int) (56 * scale + 0.5f);
+        loadToast.setTranslationY(pixels);
         final ObjectMapper mapper = new ObjectMapper();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "TWEET");
@@ -110,7 +112,7 @@ public class MainActivityFragment extends Fragment {
                             String avatarUrl = (String) creatorMap.get("avatar_url");
                             User creator = new User();
                             creator.setId(creatorId);
-                            creator.setAvatarUrl(avatarUrl);
+                            creator.setAvatar_url(avatarUrl);
                             final Tweet tweetObject = new Tweet(tweetId, creator, tweetText);
                             if (avatarUrl != null && !avatarUrl.equals(""))
                             {
