@@ -78,7 +78,6 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
 //        mLoginButton.setTextColor(cPrimDark);
 //        00e5ff
         mLoginButton.setOnClickListener(this);
-        mLoginButton.setBackgroundResource(R.drawable.button);
         return view;
     }
 

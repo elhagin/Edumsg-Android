@@ -6,7 +6,8 @@
     android:layout_marginLeft="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="edumsg.edumsg_android_app.LoginFragment">
+    tools:context="edumsg.edumsg_android_app.LoginFragment"
+    android:background="@drawable/gradient_background">
 
     <!--<TextView-->
         <!--android:id="@+id/textView"-->
@@ -35,6 +36,7 @@
         android:inputType="text"
         android:maxLines="1"
         android:singleLine="true"
+        app:roundedCorners="true"
         android:textColor="@color/colorPrimaryDark"
         android:drawableLeft="@drawable/ic_account_circle_24dp"
         android:drawablePadding="4dp" />
@@ -48,6 +50,7 @@
         android:layout_marginLeft="10dp"
         android:hint="@string/prompt_password"
         android:inputType="textPassword"
+        app:roundedCorners="true"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@color/colorPrimaryDark"

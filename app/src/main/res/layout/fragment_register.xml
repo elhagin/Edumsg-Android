@@ -6,7 +6,8 @@
     android:layout_marginRight="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="edumsg.edumsg_android_app.RegisterFragment">
+    tools:context="edumsg.edumsg_android_app.RegisterFragment"
+    android:background="@drawable/gradient_background">
 
     <!--<TextView-->
         <!--android:id="@+id/textView"-->
@@ -37,6 +38,7 @@
         android:singleLine="true"
         android:textColor="@color/colorPrimaryDark"
         android:drawableLeft="@drawable/ic_mail_24dp"
+        app:roundedCorners="true"
         android:drawablePadding="4dp"/>
 
     <com.beardedhen.androidbootstrap.BootstrapEditText
@@ -46,6 +48,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:hint="@string/prompt_username"
+        app:roundedCorners="true"
         android:inputType="text"
         android:maxLines="1"
         android:singleLine="true"
@@ -62,6 +65,7 @@
         android:hint="@string/prompt_password"
         android:inputType="textPassword"
         android:maxLines="1"
+        app:roundedCorners="true"
         android:singleLine="true"
         android:textColor="@color/colorPrimaryDark"
         android:drawableLeft="@drawable/ic_vpn_key_24dp"
@@ -75,6 +79,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:hint="@string/prompt_name"
+        app:roundedCorners="true"
         android:inputType="text"
         android:maxLines="1"
         android:singleLine="true"

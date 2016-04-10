@@ -80,7 +80,6 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
         ButterKnife.bind(this, view);
 //        mRegisterButton.setTextColor(cPrimDark);
         mRegisterButton.setOnClickListener(this);
-        mRegisterButton.setBackgroundResource(R.drawable.button);
         return view;
     }
 
