@@ -90,7 +90,7 @@ public class RegisterFragment extends AppCompatDialogFragment {
         toolbar.setTitleTextColor(Color.WHITE);
         getActivity().getWindow()
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-                        | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                        | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 //        mRegisterButton.setTextColor(cPrimDark);
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
