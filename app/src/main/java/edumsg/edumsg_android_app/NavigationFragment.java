@@ -53,8 +53,8 @@ public class NavigationFragment extends Fragment{
                 intent.putExtra("name", parentActivity.getName());
                 intent.putExtra("avatar_url", parentActivity.getAvatarUrl());
                 intent.putExtra("bio", parentActivity.getBio());
-                intent.putExtra("userId", parentActivity.getUserId());
-                intent.putExtra("creatorId", parentActivity.getUserId());
+                intent.putExtra("sessionId", parentActivity.getSessionId());
+                intent.putExtra("creatorId", -2);
                 startActivity(intent);
                 parentActivity.getSupportFragmentManager().popBackStack();
             }
@@ -67,7 +67,7 @@ public class NavigationFragment extends Fragment{
                 intent.putExtra("name", parentActivity.getName());
                 intent.putExtra("avatar_url", parentActivity.getAvatarUrl());
                 intent.putExtra("bio", parentActivity.getBio());
-                intent.putExtra("userId", parentActivity.getUserId());
+                intent.putExtra("sessionId", parentActivity.getSessionId());
                 startActivity(intent);
                 parentActivity.getSupportFragmentManager().popBackStack();
             }
@@ -169,7 +169,7 @@ public class NavigationFragment extends Fragment{
 
             ;
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+//        jsonObjectRequest.setRetryPolicy(new_user DefaultRetryPolicy(10000,
 //                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest.setTag(parentActivity.TAG);
         parentActivity.getVolleyRequestQueue().add(jsonObjectRequest);

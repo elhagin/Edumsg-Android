@@ -62,6 +62,11 @@ public class Tweet {
         this.tweet = tweet;
     }
 
+    @Override
+    public String toString() {
+        return "fav: " + isFavorited + ", retweet: " + isRetweeted;
+    }
+
     public Integer getId() {
         return id;
     }

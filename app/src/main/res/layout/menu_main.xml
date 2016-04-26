@@ -23,7 +23,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginRight="30dp"
-        android:src="@drawable/logo_placeholder" />
+        android:src="@drawable/edumsg" />
 
     <ImageButton
         android:id="@+id/btn_create"

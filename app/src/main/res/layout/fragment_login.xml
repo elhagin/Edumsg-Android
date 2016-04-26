@@ -1,14 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     tools:context="edumsg.edumsg_android_app.LoginFragment"
-    android:background="@drawable/gradient_background">
-
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@drawable/bg">
     <!--<TextView-->
         <!--android:id="@+id/textView"-->
         <!--android:layout_width="wrap_content"-->
@@ -18,58 +16,156 @@
         <!--android:textAppearance="?android:attr/textAppearanceLarge"/>-->
 
     <ImageView
-        android:layout_width="223dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="50dp"
         android:id="@+id/imageView"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/logo_placeholder" />
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/edumsg" />
 
-    <com.beardedhen.androidbootstrap.BootstrapEditText
-        android:id="@+id/username"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/username_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:hint="@string/prompt_username"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true"
-        app:roundedCorners="true"
-        android:textColor="@color/colorPrimaryDark"
-        android:drawableLeft="@drawable/ic_account_circle_24dp"
-        android:drawablePadding="4dp" />
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/imageView">
 
-    <com.beardedhen.androidbootstrap.BootstrapEditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_person_outline_black_24dp"/>
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="255dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableBottom="@drawable/line"
+            android:drawablePadding="15dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="10dp"
+            android:imeOptions="actionNext"
+            android:hint="@string/prompt_username"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pass_layout"
+        android:layout_below="@id/username_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:hint="@string/prompt_password"
-        android:inputType="textPassword"
-        app:roundedCorners="true"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textColor="@color/colorPrimaryDark"
-        android:drawableLeft="@drawable/ic_vpn_key_24dp"
-        android:drawablePadding="4dp" />
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true">
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_lock_outline_black_24dp"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="255dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableBottom="@drawable/line"
+            android:drawablePadding="15dp"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="25dp"
+            android:imeOptions="actionDone"
+            android:hint="@string/prompt_password"/>
+
+    </LinearLayout>
+
+    <Button
         android:id="@+id/login_button"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="@string/action_sign_in"
-        android:layout_marginBottom="80dp"
-        app:bootstrapBrand="primary"
-        app:bootstrapSize="md"
-        app:buttonMode="regular"
-        app:roundedCorners="true"
-        android:textStyle="bold" />
+        android:layout_below="@id/pass_layout"
+        android:layout_width="300dp"
+        android:layout_height="48.38dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/sign_in_btn" />
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:background="@drawable/newherebg"
+            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="16dp"
+                android:src="@drawable/newhere"
+                android:layout_gravity="center"/>
+            <Button
+                android:id="@+id/sign_up_btn"
+                android:layout_width="46dp"
+                android:layout_height="17dp"
+                android:layout_marginTop="1dp"
+                android:background="@drawable/signup"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--<com.beardedhen.androidbootstrap.BootstrapEditText-->
+    <!--android:id="@+id/username"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:hint="@string/prompt_username"-->
+    <!--android:inputType="text"-->
+    <!--android:maxLines="1"-->
+    <!--android:singleLine="true"-->
+    <!--app:roundedCorners="true"-->
+    <!--android:textColor="@color/colorPrimaryDark"-->
+    <!--android:drawableLeft="@drawable/ic_account_circle_24dp"-->
+    <!--android:drawablePadding="4dp" />-->
+
+    <!--<com.beardedhen.androidbootstrap.BootstrapEditText-->
+    <!--android:id="@+id/password"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:hint="@string/prompt_password"-->
+    <!--android:inputType="textPassword"-->
+    <!--app:roundedCorners="true"-->
+    <!--android:maxLines="1"-->
+    <!--android:singleLine="true"-->
+    <!--android:textColor="@color/colorPrimaryDark"-->
+    <!--android:drawableLeft="@drawable/ic_vpn_key_24dp"-->
+    <!--android:drawablePadding="4dp" />-->
+
+    <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
+    <!--android:id="@+id/login_button"-->
+    <!--style="?android:textAppearanceSmall"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:text="@string/action_sign_in"-->
+    <!--android:layout_marginBottom="80dp"-->
+    <!--app:bootstrapBrand="primary"-->
+    <!--app:bootstrapSize="md"-->
+    <!--app:buttonMode="regular"-->
+    <!--app:roundedCorners="true"-->
+    <!--android:textStyle="bold" />-->
+
+</RelativeLayout>

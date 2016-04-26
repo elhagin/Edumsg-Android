@@ -59,18 +59,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private java.util.List<DirectMessage> messages;
     private Context context;
-    private int userId;
+    private String sessionId;
 
-    ConversationAdapter(List<DirectMessage> messages, Context context, int userId)
+    ConversationAdapter(List<DirectMessage> messages, Context context, String sessionId)
     {
         this.messages = messages;
         this.context = context;
-        this.userId = userId;
+        this.sessionId = sessionId;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getSender().getId() == userId)
+        if (messages.get(position).getSender().getUsername().equals(MyAppCompatActivity.username))
             return 0;
         else
             return 1;
@@ -78,7 +78,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        ReceivedViewHolder conversationViewHolder = new ReceivedViewHolder(view);
+//        ReceivedViewHolder conversationViewHolder = new_user ReceivedViewHolder(view);
 //        return conversationViewHolder;
         if (viewType == 0) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_sent_msg, parent, false);
@@ -164,7 +164,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //            if (convertView == null)
 //            {
 //                v = LayoutInflater.from(context).inflate(R.layout.chat_sent_msg, null, false);
-//                sentViewHolder = new SentViewHolder();
+//                sentViewHolder = new_user SentViewHolder();
 //
 //                sentViewHolder.messageView.setText(message.getDm_text());
 //            }

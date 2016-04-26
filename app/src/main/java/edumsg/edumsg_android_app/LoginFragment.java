@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -13,10 +14,16 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -37,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,9 +57,10 @@ import butterknife.ButterKnife;
 
 public class LoginFragment extends AppCompatDialogFragment implements View.OnClickListener{
 
-    @Bind(R.id.username) BootstrapEditText mUsername;
-    @Bind(R.id.password) BootstrapEditText mPassword;
-    @Bind(R.id.login_button) BootstrapButton mLoginButton;
+    @Bind(R.id.username) EditText mUsername;
+    @Bind(R.id.password) EditText mPassword;
+    @Bind(R.id.login_button) Button mLoginButton;
+    @Bind(R.id.sign_up_btn) Button mSignupButton;
     @BindColor(R.color.colorPrimaryDark) int cPrimDark;
 
     private OnFragmentInteractionListener mListener;
@@ -75,9 +84,30 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
+        getActivity().getWindow()
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 //        mLoginButton.setTextColor(cPrimDark);
 //        00e5ff
         mLoginButton.setOnClickListener(this);
+//        mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_DONE)
+//                {
+//                    mLoginButton.performClick();
+//                }
+//                return false;
+//            }
+//        });
+        mSignupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .add(R.id.frame_layout, new RegisterFragment(), "register")
+                        .addToBackStack("register")
+                        .commit();
+            }
+        });
         return view;
     }
 
@@ -107,6 +137,10 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
     public void onClick(View v) {
         if (v.getId() == R.id.login_button)
         {
+            InputMethodManager imm = (InputMethodManager) getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getWindow()
+                    .getDecorView().getRootView().getWindowToken(), 0);
             attemptLogin();
         }
     }
@@ -154,7 +188,7 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
                 MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                ObjectMapper mapper = new ObjectMapper();
+                final ObjectMapper mapper = new ObjectMapper();
                 try {
                     final Map<String, Object> responseMap = mapper
                             .readValue(response.toString(),
@@ -175,10 +209,7 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtra("username", username);
-                                intent.putExtra("name", (String) userMap.get("name"));
-                                intent.putExtra("avatar_url", (String) userMap.get("avatar_url"));
-                                intent.putExtra("bio", (String) userMap.get("bio"));
-                                intent.putExtra("userId", (int) responseMap.get("user_id"));
+                                intent.putExtra("sessionId", (String) userMap.get("session_id"));
                                 startActivity(intent);
                                 getActivity().finish();
                             }

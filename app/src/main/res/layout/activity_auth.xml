@@ -1,150 +1,157 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--android:gravity="center_horizontal"-->
+<!--android:orientation="vertical"-->
+<!--tools:context=".AuthActivity"-->
+<!--android:focusable="true"-->
+<!--android:focusableInTouchMode="true"-->
+<!--android:clickable="true"-->
+<!--android:weightSum="1">-->
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    tools:context=".AuthActivity"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:clickable="true"
-    android:weightSum="1">
+    />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:background="?attr/colorPrimary"
-        android:elevation="6dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:tabBackground="@color/colorPrimary"
-        />
+    <!--<android.support.design.widget.TabLayout-->
+    <!--android:id="@+id/tab_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/toolbar"-->
+    <!--android:background="?attr/colorPrimary"-->
+    <!--android:elevation="6dp"-->
+    <!--android:minHeight="?attr/actionBarSize"-->
+    <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+    <!--app:tabBackground="@color/colorPrimary"-->
+    <!--/>-->
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--<android.support.v4.view.ViewPager-->
+    <!--android:id="@+id/pager"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
 
     <!--<ImageView-->
-        <!--android:layout_width="223dp"-->
-        <!--android:layout_height="53dp"-->
-        <!--android:id="@+id/imageView"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:src="@drawable/logo_placeholder"-->
-        <!--android:layout_weight="0.22" />-->
+    <!--android:layout_width="223dp"-->
+    <!--android:layout_height="53dp"-->
+    <!--android:id="@+id/imageView"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:src="@drawable/logo_placeholder"-->
+    <!--android:layout_weight="0.22" />-->
 
     <!--<ScrollView-->
-        <!--android:id="@+id/login_form"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:clickable="true"-->
-        <!--android:focusable="true"-->
-        <!--android:focusableInTouchMode="true"-->
-        <!--android:layout_marginTop="20dp">-->
+    <!--android:id="@+id/login_form"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:clickable="true"-->
+    <!--android:focusable="true"-->
+    <!--android:focusableInTouchMode="true"-->
+    <!--android:layout_marginTop="20dp">-->
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/email_login_form"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="vertical"-->
-            <!--android:clickable="true"-->
-            <!--android:focusable="true"-->
-            <!--android:focusableInTouchMode="true">-->
+    <!--<LinearLayout-->
+    <!--android:id="@+id/email_login_form"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical"-->
+    <!--android:clickable="true"-->
+    <!--android:focusable="true"-->
+    <!--android:focusableInTouchMode="true">-->
 
-                <!--<com.beardedhen.androidbootstrap.BootstrapEditText-->
-                    <!--android:id="@+id/email"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="10dp"-->
-                    <!--android:layout_marginRight="10dp"-->
-                    <!--android:hint="@string/prompt_email"-->
-                    <!--android:imeActionId="@+id/login"-->
-                    <!--android:imeActionLabel="@string/action_sign_in_short"-->
-                    <!--android:imeOptions="actionUnspecified"-->
-                    <!--android:inputType="textEmailAddress"-->
-                    <!--android:maxLines="1"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:textColor="@color/colorPrimaryDark"-->
-                    <!--android:drawableLeft="@drawable/ic_mail_24dp"-->
-                    <!--android:drawablePadding="4dp"/>-->
+    <!--<com.beardedhen.androidbootstrap.BootstrapEditText-->
+    <!--android:id="@+id/email"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:hint="@string/prompt_email"-->
+    <!--android:imeActionId="@+id/login"-->
+    <!--android:imeActionLabel="@string/action_sign_in_short"-->
+    <!--android:imeOptions="actionUnspecified"-->
+    <!--android:inputType="textEmailAddress"-->
+    <!--android:maxLines="1"-->
+    <!--android:singleLine="true"-->
+    <!--android:textColor="@color/colorPrimaryDark"-->
+    <!--android:drawableLeft="@drawable/ic_mail_24dp"-->
+    <!--android:drawablePadding="4dp"/>-->
 
-                <!--<com.beardedhen.androidbootstrap.BootstrapEditText-->
-                    <!--android:id="@+id/usernameLogin"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="10dp"-->
-                    <!--android:layout_marginRight="10dp"-->
-                    <!--android:hint="@string/prompt_username"-->
-                    <!--android:imeActionId="@+id/login"-->
-                    <!--android:imeActionLabel="@string/action_sign_in_short"-->
-                    <!--android:imeOptions="actionUnspecified"-->
-                    <!--android:inputType="text"-->
-                    <!--android:maxLines="1"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:textColor="@color/colorPrimaryDark"-->
-                    <!--android:drawableLeft="@drawable/ic_account_circle_24dp"-->
-                    <!--android:drawablePadding="4dp" />-->
+    <!--<com.beardedhen.androidbootstrap.BootstrapEditText-->
+    <!--android:id="@+id/usernameLogin"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:hint="@string/prompt_username"-->
+    <!--android:imeActionId="@+id/login"-->
+    <!--android:imeActionLabel="@string/action_sign_in_short"-->
+    <!--android:imeOptions="actionUnspecified"-->
+    <!--android:inputType="text"-->
+    <!--android:maxLines="1"-->
+    <!--android:singleLine="true"-->
+    <!--android:textColor="@color/colorPrimaryDark"-->
+    <!--android:drawableLeft="@drawable/ic_account_circle_24dp"-->
+    <!--android:drawablePadding="4dp" />-->
 
-                <!--<com.beardedhen.androidbootstrap.BootstrapEditText-->
-                    <!--android:id="@+id/passwordLogin"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="10dp"-->
-                    <!--android:layout_marginRight="10dp"-->
-                    <!--android:hint="@string/prompt_password"-->
-                    <!--android:imeActionId="@+id/login"-->
-                    <!--android:imeActionLabel="@string/action_sign_in_short"-->
-                    <!--android:imeOptions="actionUnspecified"-->
-                    <!--android:inputType="textPassword"-->
-                    <!--android:maxLines="1"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:textColor="@color/colorPrimaryDark"-->
-                    <!--android:drawableLeft="@drawable/ic_vpn_key_24dp"-->
-                    <!--android:drawablePadding="4dp" />-->
+    <!--<com.beardedhen.androidbootstrap.BootstrapEditText-->
+    <!--android:id="@+id/passwordLogin"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:hint="@string/prompt_password"-->
+    <!--android:imeActionId="@+id/login"-->
+    <!--android:imeActionLabel="@string/action_sign_in_short"-->
+    <!--android:imeOptions="actionUnspecified"-->
+    <!--android:inputType="textPassword"-->
+    <!--android:maxLines="1"-->
+    <!--android:singleLine="true"-->
+    <!--android:textColor="@color/colorPrimaryDark"-->
+    <!--android:drawableLeft="@drawable/ic_vpn_key_24dp"-->
+    <!--android:drawablePadding="4dp" />-->
 
-            <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
-                <!--android:id="@+id/register_button"-->
-                <!--style="?android:textAppearanceSmall"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:layout_marginLeft="10dp"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:text="@string/action_register"-->
-                <!--android:layout_marginBottom="80dp"-->
-                <!--app:bootstrapBrand="primary"-->
-                <!--app:bootstrapSize="md"-->
-                <!--app:buttonMode="regular"-->
-                <!--app:roundedCorners="true"-->
-                <!--android:textStyle="normal" />-->
+    <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
+    <!--android:id="@+id/register_button"-->
+    <!--style="?android:textAppearanceSmall"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_marginTop="16dp"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:text="@string/action_register"-->
+    <!--android:layout_marginBottom="80dp"-->
+    <!--app:bootstrapBrand="primary"-->
+    <!--app:bootstrapSize="md"-->
+    <!--app:buttonMode="regular"-->
+    <!--app:roundedCorners="true"-->
+    <!--android:textStyle="normal" />-->
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-                <!--android:text="Already have an account?"-->
-                <!--android:id="@+id/textView"-->
-                <!--android:textColor="@color/colorPrimaryDark" />-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+    <!--android:text="Already have an account?"-->
+    <!--android:id="@+id/textView"-->
+    <!--android:textColor="@color/colorPrimaryDark" />-->
 
-            <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
-                <!--android:id="@+id/sign_in_button"-->
-                <!--style="?android:textAppearanceSmall"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:layout_marginLeft="10dp"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:text="@string/action_sign_in"-->
-                <!--android:textStyle="normal"-->
-                <!--app:bootstrapBrand="primary"-->
-                <!--app:bootstrapSize="md"-->
-                <!--app:buttonMode="regular"-->
-                <!--app:roundedCorners="true" />-->
+    <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
+    <!--android:id="@+id/sign_in_button"-->
+    <!--style="?android:textAppearanceSmall"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_marginTop="16dp"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:text="@string/action_sign_in"-->
+    <!--android:textStyle="normal"-->
+    <!--app:bootstrapBrand="primary"-->
+    <!--app:bootstrapSize="md"-->
+    <!--app:buttonMode="regular"-->
+    <!--app:roundedCorners="true" />-->
 
-        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
     <!--</ScrollView>-->
-</LinearLayout>
+    <!--</LinearLayout>-->

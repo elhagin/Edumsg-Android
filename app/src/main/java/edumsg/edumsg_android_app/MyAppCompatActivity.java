@@ -11,10 +11,11 @@ import com.android.volley.toolbox.Volley;
 public class MyAppCompatActivity extends AppCompatActivity {
 
     int userId;
-    String username;
+    protected static String username;
     String avatarUrl;
     String name;
     String bio;
+    protected static String sessionId;
     public static final String requestUrl = "http://10.0.3.2:8080/";
     RequestQueue mRequestQueue;
     static final String TAG = "Request";
@@ -65,5 +66,9 @@ public class MyAppCompatActivity extends AppCompatActivity {
 
     public String getBio() {
         return bio;
+    }
+
+    public String getSessionId() {
+        return sessionId;
     }
 }

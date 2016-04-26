@@ -1,7 +1,7 @@
 package edumsg.edumsg_android_app;
 
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -10,13 +10,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -38,11 +43,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 public class MessagesActivity extends MyAppCompatActivity {
@@ -51,6 +56,7 @@ public class MessagesActivity extends MyAppCompatActivity {
     private RequestQueue mRequestQueue;
     private MessagesAdapter messagesAdapter;
     private ArrayList<User> followers;
+    @BindColor(R.color.colorPrimary) int cPrimary;
     @Bind(R.id.toolbar_msgs)
     Toolbar toolbar;
     //    @Bind(R.id.refresh) SwipeRefreshLayout swipeRefreshLayout;
@@ -62,7 +68,7 @@ public class MessagesActivity extends MyAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
         ButterKnife.bind(this);
-        userId = getIntent().getIntExtra("userId", -1);
+//        sessionId = getIntent().getStringExtra("sessionId");
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -75,7 +81,7 @@ public class MessagesActivity extends MyAppCompatActivity {
 
         conversations = new ArrayList<>();
         followers = new ArrayList<>();
-        messagesAdapter = new MessagesAdapter(this, conversations, userId);
+        messagesAdapter = new MessagesAdapter(this, conversations, sessionId);
         recyclerView.setAdapter(messagesAdapter);
         getMessages();
     }
@@ -91,7 +97,7 @@ public class MessagesActivity extends MyAppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_msg_btn:
-                getRecipient();
+                sendMessage();
                 break;
         }
 
@@ -110,7 +116,7 @@ public class MessagesActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams2 = new HashMap<>();
         jsonParams2.put("queue", "USER");
         jsonParams2.put("method", "followers");
-        jsonParams2.put("user_id", userId + "");
+        jsonParams2.put("session_id", sessionId + "");
         JSONObject jsonRequest2 = new JSONObject(jsonParams2);
         JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.POST,
                 MainActivity.requestUrl, jsonRequest2, new Response.Listener<JSONObject>() {
@@ -127,7 +133,7 @@ public class MessagesActivity extends MyAppCompatActivity {
                         Map<String, String> jsonParams = new HashMap<>();
                         jsonParams.put("queue", "DM");
                         jsonParams.put("method", "get_convs");
-                        jsonParams.put("user_id", userId + "");
+                        jsonParams.put("session_id", sessionId);
                         JSONObject jsonRequest = new JSONObject(jsonParams);
                         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                                 MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -145,19 +151,19 @@ public class MessagesActivity extends MyAppCompatActivity {
                                         while (iterator.hasNext()) {
 //                                            Map<String, Object> convJson = mapper
 //                                                    .readValue(mapper.writeValueAsString(iterator.next()),
-//                                                            new TypeReference<HashMap<String, Object>>() {
+//                                                            new_user TypeReference<HashMap<String, Object>>() {
 //                                                            });
 //                                            int convId = (int) convJson.get("id");
 //                                            LinkedHashMap lastDmMap = (LinkedHashMap) convJson.get("lastDM");
 //                                            LinkedHashMap senderMap = (LinkedHashMap) lastDmMap.get("sender");
 //                                            LinkedHashMap receiverMap = (LinkedHashMap) lastDmMap.get("reciever");
 //                                            String dmText = (String) lastDmMap.get("dm_text");
-//                                            User sender = new User();
+//                                            User sender = new_user User();
 //                                            sender.setId((int) senderMap.get("id"));
 //                                            sender.setName((String) senderMap.get("name"));
 //                                            sender.setUsername((String) senderMap.get("username"));
 //                                            sender.setAvatar_url((String) senderMap.get("avatar_url"));
-//                                            User receiver = new User();
+//                                            User receiver = new_user User();
 //                                            receiver.setId((int) receiverMap.get("id"));
 //                                            receiver.setName((String) receiverMap.get("name"));
 //                                            receiver.setUsername((String) receiverMap.get("username"));
@@ -170,7 +176,7 @@ public class MessagesActivity extends MyAppCompatActivity {
                                             DirectMessage lastDm = conversation.getLastDM();
                                             User sender = lastDm.getSender();
                                             User receiver = lastDm.getReciever();
-                                            if (sender.getId() == userId)
+                                            if (sender.getUsername().equals(MyAppCompatActivity.username))
                                                 userImg = receiver.getAvatar_url();
                                             else
                                                 userImg = sender.getAvatar_url();
@@ -200,7 +206,7 @@ public class MessagesActivity extends MyAppCompatActivity {
                                         Log.e("Response Error Msg", e.getMessage());
                                     }
                                 } else {
-//                    Toast.makeText(this, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, volleyError.sendMessage(), Toast.LENGTH_SHORT).show();
                                     Log.e("Volley", volleyError.toString());
                                 }
                             }
@@ -236,7 +242,7 @@ public class MessagesActivity extends MyAppCompatActivity {
                         Log.e("Response Error Msg", e.getMessage());
                     }
                 } else {
-//                    Toast.makeText(this, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, volleyError.sendMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("Volley", volleyError.toString());
                 }
             }
@@ -281,24 +287,34 @@ public class MessagesActivity extends MyAppCompatActivity {
         }
     }
 
-    private void getRecipient() {
+    private void sendMessage() {
+//        previousDialog.dismiss();
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        final AutoCompleteTextView input = new AutoCompleteTextView(this);
+        final LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        final AutoCompleteTextView getRecipient = new AutoCompleteTextView(this);
+        getRecipient.setHint("Recipient");
         final FollowersAdapter followersAdapter = new FollowersAdapter(this, android.R.layout.simple_list_item_1,
                 followers);
-        input.setAdapter(followersAdapter);
-        input.setThreshold(1);
+        getRecipient.setAdapter(followersAdapter);
+        getRecipient.setThreshold(1);
+        getRecipient.setSingleLine(true);
+        final Button sendBtn = new Button(MessagesActivity.this);
+        final EditText input = new EditText(MessagesActivity.this);
+        input.setHint("Enter your message here");
+        input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setLines(4);
+        input.setSingleLine(false);
+        input.setBackgroundDrawable(null);
 
-//        input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-//        input.setLines(4);
-        input.setSingleLine(true);
-//        input.setBackgroundDrawable(null);
-        builder.setView(input);
-//        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        linearLayout.addView(getRecipient, 0);
+        linearLayout.addView(input, 1);
+
+        builder.setView(linearLayout);
+//        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
 //            @Override
 //            public void onClick(DialogInterface dialog, int which) {
-//                getMessage(followersAdapter.getItem(input.getListSelection()).getId());
+//                sendMessage(recipient, input.getText().toString());
 //            }
 //        });
 //        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -307,44 +323,66 @@ public class MessagesActivity extends MyAppCompatActivity {
 //                dialog.cancel();
 //            }
 //        });
-
         final AlertDialog alertDialog = builder.create();
-        alertDialog.setTitle("Enter recipient username");
         alertDialog.show();
+        alertDialog.setTitle("Send message");
+        alertDialog.show();
+        Button cancelBtn = new Button(MessagesActivity.this);
+        sendBtn.setBackgroundColor(cPrimary);
+        sendBtn.setTextColor(Color.WHITE);
+        final float scale = getApplicationContext()
+                .getResources().getDisplayMetrics().density;
+        int pixels = (int) (10 * scale + 0.5f);
+        LinearLayout.LayoutParams layoutParams2
+                = new LinearLayout.LayoutParams
+                (ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams2.setMargins(0, 0, pixels, 0);
+        sendBtn.setLayoutParams(layoutParams2);
+        cancelBtn.setBackgroundColor(cPrimary);
+        cancelBtn.setTextColor(Color.WHITE);
+        sendBtn.setText(getString(R.string.action_send));
+        pixels = (int) (80 * scale + 0.5f);
+        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(pixels,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        pixels = (int) (20 * scale + 0.5f);
+        layoutParams.rightMargin = pixels;
+        sendBtn.setLayoutParams(layoutParams);
+        layoutParams.rightMargin = 0;
+        cancelBtn.setLayoutParams(layoutParams);
+        cancelBtn.setText(getString(R.string.action_cancel));
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
 
-        input.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        getRecipient.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getMessage(followers.get(position), alertDialog);
-            }
-        });
-    }
-
-    private void getMessage(final User recipient, AlertDialog previousDialog) {
-        previousDialog.dismiss();
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        input.setLines(4);
-        input.setSingleLine(false);
-        input.setBackgroundDrawable(null);
-        builder.setView(input);
-        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                sendMessage(recipient, input.getText().toString());
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+                final User recipient = followers.get(position);
+                sendBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (input.getText().length() > 0) {
+                            alertDialog.dismiss();
+                            sendMessage(recipient, input.getText().toString());
+                        }
+                    }
+                });
             }
         });
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.setTitle("Enter message");
-        alertDialog.show();
+        LinearLayout buttons = new LinearLayout(MessagesActivity.this);
+        buttons.setOrientation(LinearLayout.HORIZONTAL);
+        buttons.addView(sendBtn, 0);
+        buttons.addView(cancelBtn, 1);
+        LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(android.app.ActionBar.LayoutParams.WRAP_CONTENT,
+                android.app.ActionBar.LayoutParams.WRAP_CONTENT);
+        layoutParams1.gravity = Gravity.LEFT;
+        buttons.setLayoutParams(layoutParams1);
+        linearLayout.addView(buttons, 2);
     }
 
     private void sendMessage(final User recipient, final String message) {
@@ -357,7 +395,7 @@ public class MessagesActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams2 = new HashMap<>();
         jsonParams2.put("queue", "DM");
         jsonParams2.put("method", "create_dm");
-        jsonParams2.put("sender_id", userId + "");
+        jsonParams2.put("session_id", sessionId);
         jsonParams2.put("receiver_id", recipient.getId() + "");
         jsonParams2.put("dm_text", message);
         JSONObject jsonRequest2 = new JSONObject(jsonParams2);
@@ -408,7 +446,7 @@ public class MessagesActivity extends MyAppCompatActivity {
                         Log.e("Response Error Msg", e.getMessage());
                     }
                 } else {
-//                    Toast.makeText(this, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, volleyError.sendMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("Volley", volleyError.toString());
                 }
             }

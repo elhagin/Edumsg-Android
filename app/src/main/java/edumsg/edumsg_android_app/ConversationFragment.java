@@ -53,7 +53,7 @@ public class ConversationFragment extends Fragment {
     EditText sendMessage;
     @Bind(R.id.enter_chat1)
     ImageView sendBtn;
-    private int userId;
+//    private int userId;
 
     public ConversationFragment() {}
 
@@ -61,7 +61,7 @@ public class ConversationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         convId = getArguments().getInt("convId");
-        userId = getArguments().getInt("userId");
+//        userId = getArguments().getInt("userId");
         getConversation();
     }
 
@@ -71,7 +71,7 @@ public class ConversationFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_conversation, container, false);
         ButterKnife.bind(this, view);
 
-//        conversationRV.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext()).build());
+//        conversationRV.addItemDecoration(new_user HorizontalDividerItemDecoration.Builder(getContext()).build());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         conversationRV.setLayoutManager(linearLayoutManager);
         sendMessage.addTextChangedListener(new TextWatcher() {
@@ -104,7 +104,7 @@ public class ConversationFragment extends Fragment {
             public void onClick(View v) {
                 if (conversation != null) {
                     DirectMessage lastDm = conversation.getDms().get(0);
-                    sendMessage(lastDm.getSender().getId() == userId ?
+                    sendMessage(lastDm.getSender().getUsername().equals(MyAppCompatActivity.username) ?
                             lastDm.getReciever().getId() : lastDm.getSender().getId(),
                             sendMessage.getText().toString());
                     InputMethodManager imm = (InputMethodManager) getContext()
@@ -116,7 +116,7 @@ public class ConversationFragment extends Fragment {
             }
         });
         messages = new ArrayList<>();
-        conversationAdapter = new ConversationAdapter(messages, getContext(), userId);
+        conversationAdapter = new ConversationAdapter(messages, getContext(), MyAppCompatActivity.sessionId);
         conversationRV.setAdapter(conversationAdapter);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         return view;
@@ -191,7 +191,7 @@ public class ConversationFragment extends Fragment {
         Map<String, String> jsonParams2 = new HashMap<>();
         jsonParams2.put("queue", "DM");
         jsonParams2.put("method", "create_dm");
-        jsonParams2.put("sender_id", userId + "");
+        jsonParams2.put("session_id", MyAppCompatActivity.sessionId);
         jsonParams2.put("receiver_id", recipientId + "");
         jsonParams2.put("dm_text", message);
         JSONObject jsonRequest2 = new JSONObject(jsonParams2);

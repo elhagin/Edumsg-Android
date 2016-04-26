@@ -38,13 +38,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     private List<Conversation> conversations;
     private Context context;
-    private int userId;
+    private String sessionId;
 
-    MessagesAdapter(Context context, List<Conversation> conversations, int userId)
+    MessagesAdapter(Context context, List<Conversation> conversations, String sessionId)
     {
         this.context = context;
         this.conversations = conversations;
-        this.userId = userId;
+        this.sessionId = sessionId;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         String info = "";
         String imageUrl = "";
         final DirectMessage lastDm = conv.getLastDM();
-        if (lastDm.getReciever().getId() == userId) {
+        if (lastDm.getReciever().getUsername().equals(MyAppCompatActivity.username)) {
             info = context.getString(R.string.user_info, lastDm.getSender().getName(),
                     lastDm.getSender().getUsername());
             imageUrl = lastDm.getSender().getAvatar_url();
@@ -83,7 +83,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                 intent.putExtra("avatar_url", main.getAvatarUrl());
                 intent.putExtra("bio", main.getBio());
                 intent.putExtra("creatorId",
-                        lastDm.getReciever().getId() == userId ? lastDm.getSender().getId()
+                        lastDm.getReciever().getUsername().equals(MyAppCompatActivity.username)
+                                ? lastDm.getSender().getId()
                                 : lastDm.getReciever().getId());
                 intent.putExtra("userId", main.getUserId());
                 main.startActivity(intent);
@@ -98,7 +99,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                 ConversationFragment conversationFragment = new ConversationFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt("convId", conv.getId());
-                bundle.putInt("userId", userId);
                 conversationFragment.setArguments(bundle);
                 fragmentManager.beginTransaction()
                         .add(android.R.id.content, conversationFragment).addToBackStack("conv")

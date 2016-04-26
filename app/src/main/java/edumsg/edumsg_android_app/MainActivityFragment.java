@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -38,7 +39,6 @@ public class MainActivityFragment extends Fragment {
     @Bind(R.id.replies_recycler_view) RecyclerView recyclerView;
     private List<Tweet> replies;
     private RVAdapter rvAdapter;
-    private int userId;
     private int tweetId;
 
     public MainActivityFragment() {
@@ -56,7 +56,7 @@ public class MainActivityFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         replies = new ArrayList<>();
-        rvAdapter = new RVAdapter(getContext(), replies, userId);
+        rvAdapter = new RVAdapter(getActivity(), replies, MyAppCompatActivity.sessionId);
         recyclerView.setAdapter(rvAdapter);
         populateRV();
         return view;
@@ -67,7 +67,6 @@ public class MainActivityFragment extends Fragment {
     {
         super.onCreate(savedInstanceState);
         tweetId = getArguments().getInt("tweetId");
-        userId = getArguments().getInt("userId");
     }
 
     private void populateRV()
@@ -112,6 +111,7 @@ public class MainActivityFragment extends Fragment {
                             String avatarUrl = (String) creatorMap.get("avatar_url");
                             User creator = new User();
                             creator.setId(creatorId);
+                            creator.setUsername((String) creatorMap.get("username"));
                             creator.setAvatar_url(avatarUrl);
                             final Tweet tweetObject = new Tweet(tweetId, creator, tweetText);
                             if (avatarUrl != null && !avatarUrl.equals(""))
@@ -142,14 +142,14 @@ public class MainActivityFragment extends Fragment {
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 loadToast.error();
-                error.printStackTrace();
+//                error.printStackTrace();
             }
         }) {
             @Override

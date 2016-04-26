@@ -11,12 +11,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.android.volley.AuthFailureError;
@@ -48,13 +52,14 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 
-public class RegisterFragment extends AppCompatDialogFragment implements View.OnClickListener{
+public class RegisterFragment extends AppCompatDialogFragment {
 
-    @Bind(R.id.email) BootstrapEditText mEmail;
-    @Bind(R.id.username) BootstrapEditText mUsername;
-    @Bind(R.id.password) BootstrapEditText mPassword;
-    @Bind(R.id.name) BootstrapEditText mName;
-    @Bind(R.id.register_button) BootstrapButton mRegisterButton;
+    @Bind(R.id.email) EditText mEmail;
+    @Bind(R.id.username) EditText mUsername;
+    @Bind(R.id.password) EditText mPassword;
+    @Bind(R.id.name) EditText mName;
+    @Bind(R.id.register_button) Button mRegisterButton;
+    @Bind(R.id.toolbar) Toolbar toolbar;
     @BindColor(R.color.colorPrimaryDark) int cPrimDark;
 
     private OnFragmentInteractionListener mListener;
@@ -76,10 +81,27 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+//        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(),
+//                R.style.AppTheme);
+//        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         ButterKnife.bind(this, view);
+        toolbar.setTitle("Register");
+        toolbar.setTitleTextColor(Color.WHITE);
+        getActivity().getWindow()
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+                        | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 //        mRegisterButton.setTextColor(cPrimDark);
-        mRegisterButton.setOnClickListener(this);
+        mRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getActivity().getWindow()
+                        .getDecorView().getRootView().getWindowToken(), 0);
+                attemptRegister();
+            }
+        });
         return view;
     }
 
@@ -103,14 +125,6 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.register_button)
-        {
-            attemptRegister();
-        }
     }
 
     private void attemptRegister() {
@@ -278,10 +292,7 @@ public class RegisterFragment extends AppCompatDialogFragment implements View.On
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtra("username", username);
-                                intent.putExtra("name", (String) userMap.get("name"));
-                                intent.putExtra("avatar_url", (String) userMap.get("avatar_url"));
-                                intent.putExtra("bio", (String) userMap.get("bio"));
-                                intent.putExtra("userId", (int) responseMap.get("user_id"));
+                                intent.putExtra("sessionId", (String) userMap.get("session_id"));
                                 startActivity(intent);
                                 getActivity().finish();
                             }

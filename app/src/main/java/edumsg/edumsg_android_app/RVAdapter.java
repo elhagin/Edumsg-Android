@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
@@ -17,9 +16,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +32,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidviewhover.BlurLayout;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.picasso.Picasso;
@@ -56,12 +60,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
 
     public class TweetViewHolder extends RecyclerView.ViewHolder
     {
-
+        @Bind(R.id.tweet_blur_layout) BlurLayout tweetBlurLayout;
         @Bind(R.id.user_image) ImageView userImage;
         @Bind(R.id.tweet) TextView tweet;
-        @Bind(R.id.retweet_button) ImageButton retweetBtn;
-        @Bind(R.id.reply_button) ImageButton replyBtn;
-        @Bind(R.id.favorite_button) ImageButton favoriteBtn;
         @Bind(R.id.replies_progress) ProgressBar repliesProgress;
         @Bind(R.id.replies) RelativeLayout repliesLayout;
         @Bind(R.id.reply1) TextView reply1;
@@ -92,14 +93,19 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
 
     private List<Tweet> tweetObjects;
     private Context context;
-    private int userId;
+    private String sessionId;
     @BindColor(R.color.colorPrimary) int cPrimary;
+    @Bind(R.id.retweet_button) CheckBox retweetBtn;
+    @Bind(R.id.reply_button) ImageButton replyBtn;
+    @Bind(R.id.favorite_button) CheckBox favoriteBtn;
+    @Bind(R.id.more_button) ImageButton moreBtn;
 
-    RVAdapter(Context context, List<Tweet> tweetObjects, int userId)
+
+    RVAdapter(Context context, List<Tweet> tweetObjects, String sessionId)
     {
         this.context = context;
         this.tweetObjects = tweetObjects;
-        this.userId = userId;
+        this.sessionId = sessionId;
     }
 
     @Override
@@ -108,7 +114,30 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
     }
 
     @Override
+    public TweetViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tweets_rv, parent, false);
+        TweetViewHolder tweetViewHolder = new TweetViewHolder(view);
+        return tweetViewHolder;
+    }
+
+    @Override
     public void onBindViewHolder(final TweetViewHolder holder, final int position) {
+        View hoverView = LayoutInflater.from(context).inflate(R.layout.tweet_hover_view, null);
+        ButterKnife.bind(this, hoverView);
+        holder.tweetBlurLayout.setHoverView(hoverView);
+        holder.tweetBlurLayout.addChildAppearAnimator(hoverView, R.id.retweet_button, Techniques.FlipInX);
+        holder.tweetBlurLayout.addChildAppearAnimator(hoverView, R.id.reply_button, Techniques.FlipInX);
+        holder.tweetBlurLayout.addChildAppearAnimator(hoverView, R.id.favorite_button, Techniques.FlipInX);
+        holder.tweetBlurLayout.addChildAppearAnimator(hoverView, R.id.more_button, Techniques.FlipInX);
+        holder.tweetBlurLayout.addChildDisappearAnimator(hoverView, R.id.retweet_button, Techniques.FlipOutX);
+        holder.tweetBlurLayout.addChildDisappearAnimator(hoverView, R.id.reply_button, Techniques.FlipOutX);
+        holder.tweetBlurLayout.addChildDisappearAnimator(hoverView, R.id.favorite_button, Techniques.FlipOutX);
+        holder.tweetBlurLayout.addChildDisappearAnimator(hoverView, R.id.more_button, Techniques.FlipOutX);
+        try
+        {
+            holder.tweetBlurLayout.dismissHover();
+        }
+        catch (Exception e) {}
         final Tweet tweetObject = tweetObjects.get(position);
         holder.repliesProgress.setIndeterminate(true);
         Picasso.with(context).load(tweetObject.getImgUrl())
@@ -117,76 +146,112 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         holder.userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    MyAppCompatActivity main = (MyAppCompatActivity) context;
-                    Intent intent = new Intent(main, ProfileActivity.class);
-                    intent.putExtra("username", main.getUsername());
-                    intent.putExtra("name", main.getName());
-                    intent.putExtra("avatar_url", main.getAvatarUrl());
-                    intent.putExtra("bio", main.getBio());
-                    intent.putExtra("creatorId", tweetObject.getCreator().getId());
-                    intent.putExtra("userId", main.getUserId());
-                    main.startActivity(intent);
+                MyAppCompatActivity main = (MyAppCompatActivity) context;
+                Intent intent = new Intent(main, ProfileActivity.class);
+                intent.putExtra("username", MyAppCompatActivity.username);
+                intent.putExtra("name", main.getName());
+                intent.putExtra("avatar_url", main.getAvatarUrl());
+                intent.putExtra("bio", main.getBio());
+                intent.putExtra("creatorId", tweetObject.getCreator().getId());
+                intent.putExtra("sessionId", main.getSessionId());
+                main.startActivity(intent);
             }
         });
         String info = context.getString(R.string.user_info, tweetObject.getCreator().getName(),
                 tweetObject.getCreator().getUsername());
         holder.creatorInfo.setText(info);
         holder.tweet.setText(tweetObject.getTweet());
-        holder.replyBtn.setColorFilter(Color.rgb(128, 128, 128));
-        setButtonColors(tweetObject, holder.retweetBtn, holder.favoriteBtn);
-        holder.retweetBtn.setOnClickListener(new View.OnClickListener() {
+        replyBtn.setColorFilter(Color.rgb(128, 128, 128));
+        setButtonStates(tweetObject, retweetBtn, favoriteBtn);
+        retweetBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                String btnTag = (String) holder.retweetBtn.getTag();
-                if (btnTag.equals("notR")) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
                     retweet(tweetObject.getId());
                     tweetObject.setIsRetweeted(true);
-                    int colorFilter2 = Color.rgb(0, 0, 0);
-                    holder.retweetBtn.setColorFilter(colorFilter2);
-                    holder.retweetBtn.setTag("R");
-                } else if (btnTag.equals("R")) {
+                }
+                else
+                {
                     unretweet(tweetObject.getId());
                     tweetObject.setIsRetweeted(false);
-                    int colorFilter1 = Color.rgb(128, 128, 128);
-                    holder.retweetBtn.setColorFilter(colorFilter1);
-                    holder.retweetBtn.setTag("notR");
                 }
             }
         });
-        if (tweetObject.getCreator().getId() == userId)
+//        retweetBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                String btnTag = (String) retweetBtn.getTag();
+//                if (!retweetBtn.isChecked()) {
+//                    retweetBtn.setChecked(true);
+//                    retweet(tweetObject.getId());
+//                    tweetObject.setIsRetweeted(true);
+//                    int colorFilter2 = Color.rgb(111, 229, 98);
+////                    retweetBtn.setColorFilter(colorFilter2);
+////                    retweetBtn.setTag("R");
+//                } else {
+//                    retweetBtn.setChecked(false);
+//                    unretweet(tweetObject.getId());
+//                    tweetObject.setIsRetweeted(false);
+//                    int colorFilter1 = Color.rgb(128, 128, 128);
+////                    retweetBtn.setColorFilter(colorFilter1);
+////                    retweetBtn.setTag("notR");
+//                }
+//            }
+//        });
+        if (tweetObject.getCreator().getUsername().equals(MyAppCompatActivity.username))
         {
-            holder.retweetBtn.setColorFilter(Color.rgb(210, 210, 210));
-            holder.retweetBtn.setClickable(false);
+//            retweetBtn.setColorFilter(Color.rgb(210, 210, 210));
+            retweetBtn.setClickable(false);
         }
-        holder.favoriteBtn.setOnClickListener(new View.OnClickListener() {
+        favoriteBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                String btnTag = (String) holder.favoriteBtn.getTag();
-                if (btnTag.equals("notF")) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
                     favorite(tweetObject.getId());
                     tweetObject.setIsFavorited(true);
-                    int colorFilter2 = Color.rgb(0, 0, 0);
-                    holder.favoriteBtn.setColorFilter(colorFilter2);
-                    holder.favoriteBtn.setTag("F");
-                } else if (btnTag.equals("F")) {
+                }
+                else
+                {
                     unfavorite(tweetObject.getId());
                     tweetObject.setIsFavorited(false);
-                    int colorFilter1 = Color.rgb(128, 128, 128);
-                    holder.favoriteBtn.setColorFilter(colorFilter1);
-                    holder.favoriteBtn.setTag("notF");
                 }
             }
         });
+//        favoriteBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+////                String btnTag = (String) favoriteBtn.getTag();
+//                if (!favoriteBtn.isChecked()) {
+//                    favoriteBtn.setChecked(true);
+//                    favorite(tweetObject.getId());
+//                    tweetObject.setIsFavorited(true);
+//                    int colorFilter2 = Color.rgb(128, 128, 128);
+////                    favoriteBtn.setColorFilter(colorFilter2);
+//                    favoriteBtn.setTag("F");
+//                } else {
+//                    favoriteBtn.setChecked(false);
+//                    unfavorite(tweetObject.getId());
+//                    tweetObject.setIsFavorited(false);
+//                    int colorFilter1 = Color.rgb(206, 45, 79);
+////                    favoriteBtn.setColorFilter(colorFilter1);
+//                    favoriteBtn.setTag("notF");
+//                }
+//            }
+//        });
 
-        holder.replyBtn.setOnTouchListener(new View.OnTouchListener() {
+        replyBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        holder.replyBtn.setColorFilter(Color.rgb(55, 58, 60));
+                        replyBtn.setColorFilter(Color.rgb(55, 58, 60));
                         return true;
                     case MotionEvent.ACTION_UP:
-                        holder.replyBtn.setColorFilter(Color.rgb(128, 128, 128));
+                        holder.tweetBlurLayout.toggleHover();
+                        replyBtn.setColorFilter(Color.rgb(128, 128, 128));
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         final EditText input = new EditText(context);
                         input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
@@ -210,8 +275,21 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                             @Override
                             public void onShow(DialogInterface dialogInterface) {
-                                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackgroundColor(cPrimary);
-                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(cPrimary);
+                                Button posBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                                posBtn.setBackgroundColor(cPrimary);
+                                posBtn.setTextColor(Color.WHITE);
+                                final float scale = context.getApplicationContext()
+                                        .getResources().getDisplayMetrics().density;
+                                int pixels = (int) (10 * scale + 0.5f);
+                                LinearLayout.LayoutParams layoutParams
+                                        = new LinearLayout.LayoutParams
+                                        (ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                ViewGroup.LayoutParams.WRAP_CONTENT);
+                                layoutParams.setMargins(0, 0, pixels, 0);
+                                posBtn.setLayoutParams(layoutParams);
+                                Button negBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                negBtn.setBackgroundColor(cPrimary);
+                                negBtn.setTextColor(Color.WHITE);
                             }
                         });
                         dialog.show();
@@ -220,9 +298,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 return false;
             }
         });
-        holder.tweet.setOnClickListener(new View.OnClickListener() {
+        moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.tweetBlurLayout.toggleHover();
                 if (holder.repliesLayout.getVisibility() == View.VISIBLE) {
                     holder.repliesLayout.setVisibility(View.GONE);
                 } else {
@@ -231,7 +310,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                     jsonParams.put("queue", "TWEET");
                     jsonParams.put("method", "get_earliest_replies");
                     jsonParams.put("tweet_id", tweetObject.getId() + "");
-                    jsonParams.put("user_id", userId + "");
+                    jsonParams.put("session_id", sessionId);
                     JSONObject jsonRequest = new JSONObject(jsonParams);
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                             MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -254,7 +333,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                                 .placeholder(R.mipmap.ic_launcher).fit()
                                                 .into(holder.replyUserImg1);
                                         holder.replyBtn1.setColorFilter(Color.rgb(128, 128, 128));
-                                        setButtonColors(firstReply, holder.retweetBtn1, holder.favoriteBtn1);
+//                                        setButtonStates(firstReply, holder.retweetBtn1, holder.favoriteBtn1);
 
                                         if (replies.size() > 1) {
                                             Tweet secondReply = replies.get(1);
@@ -263,7 +342,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                                     .placeholder(R.mipmap.ic_launcher).fit()
                                                     .into(holder.replyUserImg2);
                                             holder.replyBtn2.setColorFilter(Color.rgb(128, 128, 128));
-                                            setButtonColors(secondReply, holder.retweetBtn2, holder.favoriteBtn2);
+//                                            setButtonStates(secondReply, holder.retweetBtn2, holder.favoriteBtn2);
                                             holder.replyLayout2.setVisibility(View.VISIBLE);
                                         }
                                         if (replies.size() > 2) {
@@ -273,7 +352,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                                     .placeholder(R.mipmap.ic_launcher).fit()
                                                     .into(holder.replyUserImg3);
                                             holder.replyBtn3.setColorFilter(Color.rgb(128, 128, 128));
-                                            setButtonColors(thirdReply, holder.retweetBtn3, holder.favoriteBtn3);
+//                                            setButtonStates(thirdReply, holder.retweetBtn3, holder.favoriteBtn3);
                                             holder.replyLayout3.setVisibility(View.VISIBLE);
                                         }
                                         if (replies.size() > 3) {
@@ -287,7 +366,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                     }
                                 }
                             } catch (Exception e) {
-                                Log.e("JSONMapper", e.getMessage());
+//                                Log.e("JSONMapper", e.getMessage());
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -301,10 +380,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                     JSONObject errorObj = new JSONObject(errorJson);
                                     String error = errorObj.getString("message");
                                 } catch (JSONException e) {
-                                    Log.e("Response Error Msg", e.getMessage());
+//                                    Log.e("Response Error Msg", e.getMessage());
                                 }
                             } else {
-                                Log.e("Volley", volleyError.toString());
+//                                Log.e("Volley", volleyError.toString());
                             }
                         }
                     }) {
@@ -662,7 +741,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 MainActivityFragment mainActivityFragment = new MainActivityFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt("tweetId", tweetObject.getId());
-                bundle.putInt("userId", userId);
+                bundle.putString("username", MyAppCompatActivity.username);
+                bundle.putString("sessionId", main.getSessionId());
                 mainActivityFragment.setArguments(bundle);
                 fragmentManager.beginTransaction()
                         .add(android.R.id.content, mainActivityFragment).addToBackStack("replies")
@@ -671,12 +751,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         });
     }
 
-    @Override
-    public TweetViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tweets_rv, parent, false);
-        TweetViewHolder tweetViewHolder = new TweetViewHolder(view);
-        return tweetViewHolder;
-    }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -686,13 +760,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
     private void retweet(int tweetId)
     {
         MyAppCompatActivity main = (MyAppCompatActivity) context;
-//        final LoadToast loadToast = new LoadToast(main);
+//        final LoadToast loadToast = new_user LoadToast(main);
 //        loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "TWEET");
         jsonParams.put("method", "retweet");
         jsonParams.put("tweet_id", tweetId+"");
-        jsonParams.put("user_id", userId+"");
+        jsonParams.put("session_id", sessionId);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -711,7 +785,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 }
                 catch (Exception e)
                 {
-                    Log.e("JSONMapper", e.getMessage());
+//                    Log.e("JSONMapper", e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
@@ -744,7 +818,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 }
                 else {
 //                    Toast.makeText(main, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Volley", volleyError.toString());
+//                    Log.e("Volley", volleyError.toString());
                 }
             }
         }) {
@@ -765,13 +839,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
     private void unretweet(int tweetId)
     {
         MyAppCompatActivity main = (MyAppCompatActivity) context;
-//        final LoadToast loadToast = new LoadToast(main);
+//        final LoadToast loadToast = new_user LoadToast(main);
 //        loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "TWEET");
         jsonParams.put("method", "unretweet");
         jsonParams.put("tweet_id", tweetId+"");
-        jsonParams.put("user_id", userId+"");
+        jsonParams.put("session_id", sessionId);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -823,7 +897,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 }
                 else {
 //                    Toast.makeText(main, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Volley", volleyError.toString());
+//                    Log.e("Volley", volleyError.toString());
                 }
             }
         }) {
@@ -835,7 +909,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 return headers;
             };
         };
-//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+//        jsonObjectRequest.setRetryPolicy(new_user DefaultRetryPolicy(10000,
 //                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest.setTag("Request");
         main.getVolleyRequestQueue().add(jsonObjectRequest);
@@ -854,7 +928,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         jsonParams.put("method", "reply");
         jsonParams.put("tweet_id", tweetId+"");
         jsonParams.put("tweet_text", tweet);
-        jsonParams.put("creator_id", userId+"");
+        jsonParams.put("session_id", sessionId);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -906,7 +980,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 }
                 else {
 //                    Toast.makeText(main, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Volley", volleyError.toString());
+//                    Log.e("Volley", volleyError.toString());
                 }
             }
         }) {
@@ -928,13 +1002,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
     {
         MyAppCompatActivity main = (MyAppCompatActivity) context;
 
-//        final LoadToast loadToast = new LoadToast(main);
+//        final LoadToast loadToast = new_user LoadToast(main);
 //        loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "TWEET");
         jsonParams.put("method", "favorite");
         jsonParams.put("tweet_id", tweetId+"");
-        jsonParams.put("user_id", userId+"");
+        jsonParams.put("session_id", sessionId);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -986,7 +1060,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 }
                 else {
 //                    Toast.makeText(main, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Volley", volleyError.toString());
+//                    Log.e("Volley", volleyError.toString());
                 }
             }
         }) {
@@ -1007,13 +1081,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
     private void unfavorite(int tweetId)
     {
         MyAppCompatActivity main = (MyAppCompatActivity) context;
-//        final LoadToast loadToast = new LoadToast(main);
+//        final LoadToast loadToast = new_user LoadToast(main);
 //        loadToast.show();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "TWEET");
         jsonParams.put("method", "unfavorite");
         jsonParams.put("tweet_id", tweetId+"");
-        jsonParams.put("user_id", userId+"");
+        jsonParams.put("session_id", sessionId);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -1065,7 +1139,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                 }
                 else {
 //                    Toast.makeText(main, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Volley", volleyError.toString());
+//                    Log.e("Volley", volleyError.toString());
                 }
             }
         }) {
@@ -1168,37 +1242,42 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         return replies;
     }
 
-    private void setButtonColors(Tweet tweetObject, ImageButton retweetBtn,
-                                 ImageButton favoriteBtn)
+    private void setButtonStates(Tweet tweetObject, CheckBox retweetBtn,
+                                 CheckBox favoriteBtn)
     {
-        if (tweetObject.getCreator().getId() == userId)
+        if (tweetObject.getCreator().getUsername().equals(MyAppCompatActivity.username))
         {
-            retweetBtn.setColorFilter(Color.rgb(210, 210, 210));
+//            retweetBtn.setColorFilter(Color.rgb(210, 210, 210));
             retweetBtn.setClickable(false);
         }
         else
         {
             if (tweetObject.isRetweeted())
             {
-                retweetBtn.setColorFilter(Color.rgb(0, 0, 0));
-                retweetBtn.setTag("R");
+                retweetBtn.setChecked(true);
+//                retweetBtn.setColorFilter(Color.rgb(111, 229, 98));
+//                retweetBtn.setTag("R");
             }
             else
             {
-                retweetBtn.setColorFilter(Color.rgb(128, 128, 128));
-                retweetBtn.setTag("notR");
+                retweetBtn.setChecked(false);
+//                retweetBtn.setColorFilter(Color.rgb(128, 128, 128));
+//                retweetBtn.setTag("notR");
             }
         }
-
+        retweetBtn.invalidate();
         if (tweetObject.isFavorited())
         {
-            favoriteBtn.setColorFilter(Color.rgb(0, 0, 0));
-            favoriteBtn.setTag("F");
+//            favoriteBtn.setColorFilter(Color.rgb(128, 128, 128));
+//            favoriteBtn.setTag("notF");
+            favoriteBtn.setChecked(true);
         }
         else
         {
-            favoriteBtn.setColorFilter(Color.rgb(128, 128, 128));
-            favoriteBtn.setTag("notF");
+//            favoriteBtn.setColorFilter(Color.rgb(206, 45, 79));
+//            favoriteBtn.setTag("F");
+            favoriteBtn.setChecked(false);
         }
+        favoriteBtn.invalidate();
     }
 }

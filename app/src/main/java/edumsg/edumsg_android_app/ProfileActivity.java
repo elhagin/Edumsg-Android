@@ -71,13 +71,14 @@ public class ProfileActivity extends MyAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        username = getIntent().getStringExtra("username");
-        avatarUrl = getIntent().getStringExtra("avatar_url");
-        name = getIntent().getStringExtra("name");
-        bio = getIntent().getStringExtra("bio");
-        userId = getIntent().getIntExtra("userId", -1);
+//        username = getIntent().getStringExtra("username");
+//        avatarUrl = getIntent().getStringExtra("avatar_url");
+//        name = getIntent().getStringExtra("name");
+//        bio = getIntent().getStringExtra("bio");
+//        userId = getIntent().getIntExtra("userId", -1);
         creatorId = getIntent().getIntExtra("creatorId", -1);
-        if (creatorId == userId)
+        sessionId = getIntent().getStringExtra("sessionId");
+        if (creatorId == -2)
             owner = true;
 //        userId = 1;
 //        avatarUrl = "http://i.imgur.com/hYg5OfG.jpg";
@@ -96,7 +97,7 @@ public class ProfileActivity extends MyAppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         tweetObjects = new ArrayList<>();
-        rvAdapter = new RVAdapter(this, tweetObjects, userId);
+        rvAdapter = new RVAdapter(this, tweetObjects, sessionId);
         recyclerView.setAdapter(rvAdapter);
 
         if (!owner) {
@@ -161,12 +162,18 @@ public class ProfileActivity extends MyAppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_profile, menu);
-        return true;
+        if (owner) {
+            inflater.inflate(R.menu.menu_profile, menu);
+            return true;
+        }
+        else
+            return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!owner)
+            return true;
         switch (item.getItemId()) {
             case R.id.edit_profile_btn:
                 final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -273,8 +280,14 @@ public class ProfileActivity extends MyAppCompatActivity {
         loading.show();
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "USER");
-        jsonParams.put("method", "get_user");
-        jsonParams.put("user_id", creatorId + "");
+        if (owner) {
+            jsonParams.put("method", "my_profile");
+            jsonParams.put("session_id", sessionId);
+        }
+        else {
+            jsonParams.put("method", "get_user");
+            jsonParams.put("user_id", creatorId + "");
+        }
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -294,7 +307,7 @@ public class ProfileActivity extends MyAppCompatActivity {
                                 });
 //                        Map<String, Object> userMap = mapper
 //                                .readValue(mapper.writeValueAsString(responseMap.get("user")),
-//                                        new TypeReference<HashMap<String, Object>>() {
+//                                        new_user TypeReference<HashMap<String, Object>>() {
 //                                        });
                         bioEditText.setText(user.getBio());
                         usernameTxt.setText(user.getName());
@@ -362,7 +375,7 @@ public class ProfileActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "USER");
         jsonParams.put("method", "get_favorites");
-        jsonParams.put("user_id", creatorId+"");
+        jsonParams.put("session_id", sessionId);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(Request.Method.POST,
                 requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -380,7 +393,7 @@ public class ProfileActivity extends MyAppCompatActivity {
                         Map<String, String> jsonParams = new HashMap<>();
                         jsonParams.put("queue", "USER");
                         jsonParams.put("method", "followers");
-                        jsonParams.put("user_id", creatorId+"");
+                        jsonParams.put("session_id", sessionId);
                         JSONObject jsonRequest = new JSONObject(jsonParams);
                         JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.POST,
                                 requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -400,7 +413,7 @@ public class ProfileActivity extends MyAppCompatActivity {
                                         Map<String, String> jsonParams = new HashMap<>();
                                         jsonParams.put("queue", "USER");
                                         jsonParams.put("method", "user_tweets");
-                                        jsonParams.put("user_id", creatorId+"");
+                                        jsonParams.put("session_id", sessionId);
                                         JSONObject jsonRequest = new JSONObject(jsonParams);
                                         JsonObjectRequest jsonObjectRequest4 = new JsonObjectRequest(Request.Method.POST,
                                                 requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -562,98 +575,98 @@ public class ProfileActivity extends MyAppCompatActivity {
         getVolleyRequestQueue().add(jsonObjectRequest3);
     }
 
-    private void createTweet(final String tweet)
-    {
-        final LoadToast loadToast = new LoadToast(this);
-        final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
-        int pixels = (int) (56 * scale + 0.5f);
-        loadToast.setTranslationY(pixels);
-        loadToast.setText("Tweeting...");
-        loadToast.show();
-        Map<String, String> jsonParams = new HashMap<>();
-        jsonParams.put("queue", "TWEET");
-        jsonParams.put("method", "tweet");
-        jsonParams.put("tweet_text", tweet);
-        jsonParams.put("creator_id", userId + "");
-        JSONObject jsonRequest = new JSONObject(jsonParams);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-                requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(final JSONObject response) {
-                final ObjectMapper mapper = new ObjectMapper();
-                try {
-                    final Map<String, Object> responseMap = mapper
-                            .readValue(response.toString(),
-                                    new TypeReference<HashMap<String, Object>>() {
-                                    });
-                    if (responseMap.get("code").equals("200"))
-                    {
-                        if (owner)
-                        {
-                            User creator = new User();
-                            creator.setId(userId);
-                            creator.setUsername(username);
-                            creator.setAvatar_url(avatarUrl);
-                            creator.setName(name);
-                            creator.setBio(bio);
-                            Tweet t = new Tweet((int) responseMap.get("id"), creator, tweet);
-                            tweetObjects.add(0, t);
-                            rvAdapter.notifyItemInserted(0);
-                        }
-                        loadToast.success();
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.e("JSONMapper", e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                loadToast.error();
-                if (volleyError.networkResponse != null
-                        && volleyError.networkResponse.data != null
-                        && volleyError.networkResponse.statusCode == 400)
-                {
-                    try {
-                        String errorJson = new String(volleyError.networkResponse.data);
-                        JSONObject errorObj = new JSONObject(errorJson);
-                        String error = errorObj.getString("message");
-                        Log.e("Error from server", error);
-//                        if (error.toLowerCase().contains("username"))
+//    private void createTweet(final String tweet)
+//    {
+//        final LoadToast loadToast = new LoadToast(this);
+//        final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+//        int pixels = (int) (56 * scale + 0.5f);
+//        loadToast.setTranslationY(pixels);
+//        loadToast.setText("Tweeting...");
+//        loadToast.show();
+//        Map<String, String> jsonParams = new HashMap<>();
+//        jsonParams.put("queue", "TWEET");
+//        jsonParams.put("method", "tweet");
+//        jsonParams.put("tweet_text", tweet);
+//        jsonParams.put("session_id", sessionId + "");
+//        JSONObject jsonRequest = new JSONObject(jsonParams);
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+//                requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(final JSONObject response) {
+//                final ObjectMapper mapper = new ObjectMapper();
+//                try {
+//                    final Map<String, Object> responseMap = mapper
+//                            .readValue(response.toString(),
+//                                    new TypeReference<HashMap<String, Object>>() {
+//                                    });
+//                    if (responseMap.get("code").equals("200"))
+//                    {
+//                        if (owner)
 //                        {
-//                            mUsername.setError(error);
-//                            mUsername.requestFocus();
+//                            User creator = new User();
+//                            creator.setSession_id(sessionId);
+//                            creator.setUsername(username);
+//                            creator.setAvatar_url(avatarUrl);
+//                            creator.setName(name);
+//                            creator.setBio(bio);
+//                            Tweet t = new Tweet((int) responseMap.get("id"), creator, tweet);
+//                            tweetObjects.add(0, t);
+//                            rvAdapter.notifyItemInserted(0);
 //                        }
-//                        if (error.toLowerCase().contains("password")) {
-//                            mPassword.setError(error);
-//                            mPassword.requestFocus();
-//                        }
-                    }
-                    catch (JSONException e)
-                    {
-                        Log.e("Response Error Msg", e.getMessage());
-                    }
-                }
-                else {
-                    Log.e("Volley", volleyError.toString());
-                }
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json; charset=utf-8");
-                //headers.put("User-agent", System.getProperty("http.agent"));
-                return headers;
-            };
-        };
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        jsonObjectRequest.setTag(TAG);
-        getVolleyRequestQueue().add(jsonObjectRequest);
-    }
+//                        loadToast.success();
+//                    }
+//                }
+//                catch (Exception e)
+//                {
+//                    Log.e("JSONMapper", e.getMessage());
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError volleyError) {
+//                loadToast.error();
+//                if (volleyError.networkResponse != null
+//                        && volleyError.networkResponse.data != null
+//                        && volleyError.networkResponse.statusCode == 400)
+//                {
+//                    try {
+//                        String errorJson = new String(volleyError.networkResponse.data);
+//                        JSONObject errorObj = new JSONObject(errorJson);
+//                        String error = errorObj.getString("message");
+//                        Log.e("Error from server", error);
+////                        if (error.toLowerCase().contains("username"))
+////                        {
+////                            mUsername.setError(error);
+////                            mUsername.requestFocus();
+////                        }
+////                        if (error.toLowerCase().contains("password")) {
+////                            mPassword.setError(error);
+////                            mPassword.requestFocus();
+////                        }
+//                    }
+//                    catch (JSONException e)
+//                    {
+//                        Log.e("Response Error Msg", e.getMessage());
+//                    }
+//                }
+//                else {
+//                    Log.e("Volley", volleyError.toString());
+//                }
+//            }
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                HashMap<String, String> headers = new HashMap<String, String>();
+//                headers.put("Content-Type", "application/json; charset=utf-8");
+//                //headers.put("User-agent", System.getProperty("http.agent"));
+//                return headers;
+//            };
+//        };
+//        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        jsonObjectRequest.setTag(TAG);
+//        getVolleyRequestQueue().add(jsonObjectRequest);
+//    }
 
     private void updateUser(String bioStr)
     {
@@ -666,7 +679,7 @@ public class ProfileActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "USER");
         jsonParams.put("method", "update_user");
-        jsonParams.put("user_id", userId + "");
+        jsonParams.put("session_id", sessionId);
         jsonParams.put("bio", bioStr);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
@@ -752,8 +765,8 @@ public class ProfileActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "USER");
         jsonParams.put("method", "follow");
-        jsonParams.put("user_id", creatorId + "");
-        jsonParams.put("follower_id", userId + "");
+        jsonParams.put("session_id", sessionId);
+        jsonParams.put("followee_id", creatorId + "");
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -840,8 +853,8 @@ public class ProfileActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams = new HashMap<>();
         jsonParams.put("queue", "USER");
         jsonParams.put("method", "unfollow");
-        jsonParams.put("user_id", creatorId + "");
-        jsonParams.put("follower_id", userId + "");
+        jsonParams.put("session_id", sessionId);
+        jsonParams.put("followee_id", creatorId + "");
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 requestUrl, jsonRequest, new Response.Listener<JSONObject>() {

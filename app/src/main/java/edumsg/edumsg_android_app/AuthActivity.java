@@ -20,6 +20,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import com.android.volley.AuthFailureError;
@@ -46,8 +48,8 @@ import butterknife.ButterKnife;
 public class AuthActivity extends MyAppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener
 {
     MyPagerAdapter pagerAdapter;
-    @Bind(R.id.pager) ViewPager mPager;
-    @Bind(R.id.tab_layout) TabLayout tabLayout;
+//    @Bind(R.id.pager) ViewPager mPager;
+//    @Bind(R.id.tab_layout) TabLayout tabLayout;
     @BindColor(R.color.colorPrimary) int cPrimary;
 
     @Override
@@ -55,30 +57,35 @@ public class AuthActivity extends MyAppCompatActivity implements LoginFragment.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         ButterKnife.bind(this);
-        tabLayout.addTab(tabLayout.newTab().setText("Sign in"));
-        tabLayout.addTab(tabLayout.newTab().setText("Register"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        tabLayout.setBackgroundColor(cPrimary);
-        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), this);
-        mPager.setAdapter(pagerAdapter);
-        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-//                Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        LoginFragment loginFragment = new LoginFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.frame_layout, loginFragment).commit();
+//        tabLayout.addTab(tabLayout.newTab().setText("Sign in"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Register"));
+//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+//        tabLayout.setBackgroundColor(cPrimary);
+//        pagerAdapter = new_user MyPagerAdapter(getSupportFragmentManager(), this);
+//        mPager.setAdapter(pagerAdapter);
+//        mPager.addOnPageChangeListener(new_user TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        tabLayout.setOnTabSelectedListener(new_user TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                mPager.setCurrentItem(tab.getPosition());
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//
+//            }
+//        });
+//                Intent intent = new_user Intent(AuthActivity.this, MainActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivity(intent);
 //                finish();
@@ -137,7 +144,7 @@ public class AuthActivity extends MyAppCompatActivity implements LoginFragment.O
 //
 //        @Override
 //        protected Boolean doInBackground(Void... params) {
-//            Map<String, String> jsonParams = new HashMap<>();
+//            Map<String, String> jsonParams = new_user HashMap<>();
 //            jsonParams.put("queue", "USER");
 //            if (mMethod.equals("register")) {
 //                jsonParams.put("method", "register");
@@ -152,21 +159,21 @@ public class AuthActivity extends MyAppCompatActivity implements LoginFragment.O
 //                jsonParams.put("username", mUsername);
 //                jsonParams.put("password", mPassword);
 //            }
-//            JSONObject jsonRequest = new JSONObject(jsonParams);
-//            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-//                    MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
+//            JSONObject jsonRequest = new_user JSONObject(jsonParams);
+//            JsonObjectRequest jsonObjectRequest = new_user JsonObjectRequest(Request.Method.POST,
+//                    MainActivity.requestUrl, jsonRequest, new_user Response.Listener<JSONObject>() {
 //                @Override
 //                public void onResponse(JSONObject response) {
-//                    ObjectMapper mapper = new ObjectMapper();
+//                    ObjectMapper mapper = new_user ObjectMapper();
 //                    try {
 //                        Map<String, String> responseMap = mapper
-//                                .readValue(new ByteArrayInputStream(response.toString()
+//                                .readValue(new_user ByteArrayInputStream(response.toString()
 //                                                .getBytes("UTF-8")),
-//                                        new TypeReference<HashMap<String, String>>() {
+//                                        new_user TypeReference<HashMap<String, String>>() {
 //                                        });
 //                        if (responseMap.get("code").equals("200"))
 //                        {
-//                            JSONObject userJson = new JSONObject(responseMap.get("user"));
+//                            JSONObject userJson = new_user JSONObject(responseMap.get("user"));
 //                            user = mapper.readValue(userJson.toString(), User.class);
 //                        }
 //                    }
@@ -175,7 +182,7 @@ public class AuthActivity extends MyAppCompatActivity implements LoginFragment.O
 //                        Log.e("JSONMapper", e.getMessage());
 //                    }
 //                }
-//            }, new Response.ErrorListener() {
+//            }, new_user Response.ErrorListener() {
 //                @Override
 //                public void onErrorResponse(VolleyError error) {
 //                    Log.e("Volley", error.toString());
@@ -183,7 +190,7 @@ public class AuthActivity extends MyAppCompatActivity implements LoginFragment.O
 //            }) {
 //                @Override
 //                public Map<String, String> getHeaders() throws AuthFailureError {
-//                    HashMap<String, String> headers = new HashMap<String, String>();
+//                    HashMap<String, String> headers = new_user HashMap<String, String>();
 //                    headers.put("Content-Type", "application/json; charset=utf-8");
 //                    //headers.put("User-agent", System.getProperty("http.agent"));
 //                    return headers;

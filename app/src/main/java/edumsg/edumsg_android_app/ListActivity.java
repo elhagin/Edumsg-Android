@@ -54,7 +54,7 @@ public class ListActivity extends MyAppCompatActivity {
         listRecyclerView.setLayoutManager(linearLayoutManager);
 
         tweetObjects = new ArrayList<>();
-        rvAdapter = new RVAdapter(this, tweetObjects, userId);
+        rvAdapter = new RVAdapter(this, tweetObjects, sessionId);
         listRecyclerView.setAdapter(rvAdapter);
         getFeed();
     }

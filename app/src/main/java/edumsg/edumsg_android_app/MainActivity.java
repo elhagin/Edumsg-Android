@@ -1,6 +1,8 @@
 package edumsg.edumsg_android_app;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,8 +16,10 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -40,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 public class MainActivity extends MyAppCompatActivity {
@@ -48,6 +53,7 @@ public class MainActivity extends MyAppCompatActivity {
     private RVAdapter rvAdapter;
     private ArrayList retweets;
     private ArrayList favorites;
+    @BindColor(R.color.colorPrimary) int cPrimary;
     @Bind(R.id.my_toolbar) Toolbar toolbar;
     @Bind(R.id.refresh) SwipeRefreshLayout swipeRefreshLayout;
     @Bind(R.id.tweets_recycler_view) RecyclerView recyclerView;
@@ -59,13 +65,8 @@ public class MainActivity extends MyAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        username = getIntent().getStringExtra("username");
-        avatarUrl = getIntent().getStringExtra("avatar_url");
-        name = getIntent().getStringExtra("name");
-        bio = getIntent().getStringExtra("bio");
-        userId = getIntent().getIntExtra("userId", -1);
-        if (userId == -1)
-            userId = 1;
+        sessionId = getIntent().getExtras().getString("sessionId");
+        username = getIntent().getExtras().getString("username");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -118,8 +119,29 @@ public class MainActivity extends MyAppCompatActivity {
                         dialog.cancel();
                     }
                 });
+                final AlertDialog dialog = builder.create();
 
-                builder.show();
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Button posBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                        posBtn.setBackgroundColor(cPrimary);
+                        posBtn.setTextColor(Color.WHITE);
+                        final float scale = getApplicationContext()
+                                .getResources().getDisplayMetrics().density;
+                        int pixels = (int) (10 * scale + 0.5f);
+                        LinearLayout.LayoutParams layoutParams
+                                = new LinearLayout.LayoutParams
+                                (ViewGroup.LayoutParams.WRAP_CONTENT,
+                                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                        layoutParams.setMargins(0, 0, pixels, 0);
+                        posBtn.setLayoutParams(layoutParams);
+                        Button negBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        negBtn.setBackgroundColor(cPrimary);
+                        negBtn.setTextColor(Color.WHITE);
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -135,7 +157,7 @@ public class MainActivity extends MyAppCompatActivity {
                     }
                 }
                 NavigationFragment navigationFragment = new NavigationFragment();
-//                Bundle bundle = new Bundle();
+//                Bundle bundle = new_user Bundle();
 //                bundle.putInt("userId", userId);
 //                mainActivityFragment.setArguments(bundle);
                 fragmentManager.beginTransaction()
@@ -143,7 +165,7 @@ public class MainActivity extends MyAppCompatActivity {
                         .commit();
 //                logout();
 //                launchMessages();
-//                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+//                Intent intent = new_user Intent(MainActivity.this, ProfileActivity.class);
 //                intent.putExtra("username", getUsername());
 //                intent.putExtra("name", getName());
 //                intent.putExtra("avatar_url", getAvatar_url());
@@ -155,12 +177,19 @@ public class MainActivity extends MyAppCompatActivity {
         });
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this).build());
+        final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+        int pixels = (int) (160 * scale + 0.5f);
+        Paint paint = new Paint();
+        paint.setStrokeWidth(3.0f);
+        paint.setColor(Color.rgb(220, 220, 220));
+        paint.setAntiAlias(true);
+        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
+                .paint(paint).build());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         tweetObjects = new ArrayList<>();
-        rvAdapter = new RVAdapter(this, tweetObjects, userId);
+        rvAdapter = new RVAdapter(this, tweetObjects, sessionId);
         recyclerView.setAdapter(rvAdapter);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -203,7 +232,7 @@ public class MainActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams2 = new HashMap<>();
         jsonParams2.put("queue", "USER");
         jsonParams2.put("method", "get_retweets");
-        jsonParams2.put("user_id", userId + "");
+        jsonParams2.put("session_id", sessionId + "");
         JSONObject jsonRequest2 = new JSONObject(jsonParams2);
         JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.POST,
                 requestUrl, jsonRequest2, new Response.Listener<JSONObject>() {
@@ -220,7 +249,7 @@ public class MainActivity extends MyAppCompatActivity {
                     Map<String, String> jsonParams = new HashMap<>();
                     jsonParams.put("queue", "USER");
                     jsonParams.put("method", "get_favorites");
-                    jsonParams.put("user_id", userId+"");
+                    jsonParams.put("session_id", sessionId);
                     JSONObject jsonRequest = new JSONObject(jsonParams);
                     JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(Request.Method.POST,
                             requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -236,7 +265,7 @@ public class MainActivity extends MyAppCompatActivity {
                                 Map<String, String> jsonParams = new HashMap<>();
                                 jsonParams.put("queue", "USER");
                                 jsonParams.put("method", "timeline");
-                                jsonParams.put("user_id", userId+"");
+                                jsonParams.put("session_id", sessionId);
                                 JSONObject jsonRequest = new JSONObject(jsonParams);
                                 JsonObjectRequest jsonObjectRequest4 = new JsonObjectRequest(Request.Method.POST,
                                         requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -262,7 +291,8 @@ public class MainActivity extends MyAppCompatActivity {
                                                     final int tweetId = (int) tweetJsonObj.get("id");
                                                     final LinkedHashMap creatorMap = (LinkedHashMap) tweetJsonObj.get("creator");
                                                     final int creatorId = (int) creatorMap.get("id");
-                                                    if (creatorId == userId)
+                                                    final String creatorUsername = (String) creatorMap.get("username");
+                                                    if (creatorUsername == username)
                                                         continue;
                                                     String tweetText = (String) tweetJsonObj.get("tweet_text");
                                                     String avatarUrl = (String) creatorMap.get("avatar_url");
@@ -396,23 +426,23 @@ public class MainActivity extends MyAppCompatActivity {
 
 //    private void getTweets()
 //    {
-//        final LoadToast loadToast = new LoadToast(this);
+//        final LoadToast loadToast = new_user LoadToast(this);
 //        loadToast.setText("Loading...");
 //        loadToast.show();
-//        Map<String, String> jsonParams = new HashMap<>();
+//        Map<String, String> jsonParams = new_user HashMap<>();
 //        jsonParams.put("queue", "USER");
 //        jsonParams.put("method", "timeline");
 //        jsonParams.put("user_id", userId+"");
-//        JSONObject jsonRequest = new JSONObject(jsonParams);
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-//                requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
+//        JSONObject jsonRequest = new_user JSONObject(jsonParams);
+//        JsonObjectRequest jsonObjectRequest = new_user JsonObjectRequest(Request.Method.POST,
+//                requestUrl, jsonRequest, new_user Response.Listener<JSONObject>() {
 //            @Override
 //            public void onResponse(final JSONObject response) {
-//                final ObjectMapper mapper = new ObjectMapper();
+//                final ObjectMapper mapper = new_user ObjectMapper();
 //                try {
 //                    final Map<String, Object> responseMap = mapper
 //                            .readValue(response.toString(),
-//                                    new TypeReference<HashMap<String, Object>>() {
+//                                    new_user TypeReference<HashMap<String, Object>>() {
 //                                    });
 //                    if (responseMap.get("code").equals("200"))
 //                    {
@@ -423,12 +453,12 @@ public class MainActivity extends MyAppCompatActivity {
 //                            while (iterator.hasNext()) {
 //                                Map<String, Object> tweetJsonObj = mapper
 //                                        .readValue(mapper.writeValueAsString(iterator.next()),
-//                                                new TypeReference<HashMap<String, Object>>() {
+//                                                new_user TypeReference<HashMap<String, Object>>() {
 //                                                });
 //                                String tweetText = (String) tweetJsonObj.get("tweet_text");
 //                                LinkedHashMap creator = (LinkedHashMap) tweetJsonObj.get("creator");
 //                                String avatarUrl = (String) creator.get("avatar_url");
-//                                Tweet tweetObject = new Tweet(userId, avatarUrl,
+//                                Tweet tweetObject = new_user Tweet(userId, avatarUrl,
 //                                        tweetText);
 //                                tweetObjects.add(tweetObject);
 //                            }
@@ -449,7 +479,7 @@ public class MainActivity extends MyAppCompatActivity {
 //                    Log.e("JSONMapper", e.getMessage());
 //                }
 //            }
-//        }, new Response.ErrorListener() {
+//        }, new_user Response.ErrorListener() {
 //            @Override
 //            public void onErrorResponse(VolleyError volleyError) {
 //                loadToast.error();
@@ -458,8 +488,8 @@ public class MainActivity extends MyAppCompatActivity {
 //                        && volleyError.networkResponse.statusCode == 400)
 //                {
 //                    try {
-//                        String errorJson = new String(volleyError.networkResponse.data);
-//                        JSONObject errorObj = new JSONObject(errorJson);
+//                        String errorJson = new_user String(volleyError.networkResponse.data);
+//                        JSONObject errorObj = new_user JSONObject(errorJson);
 //                        String error = errorObj.getString("message");
 ////                        if (error.toLowerCase().contains("username"))
 ////                        {
@@ -483,13 +513,13 @@ public class MainActivity extends MyAppCompatActivity {
 //        }) {
 //            @Override
 //            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<String, String>();
+//                HashMap<String, String> headers = new_user HashMap<String, String>();
 //                headers.put("Content-Type", "application/json; charset=utf-8");
 //                //headers.put("User-agent", System.getProperty("http.agent"));
 //                return headers;
 //            };
 //        };
-////        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+////        jsonObjectRequest.setRetryPolicy(new_user DefaultRetryPolicy(10000,
 ////                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 //        getVolleyRequestQueue().add(jsonObjectRequest);
 //    }
@@ -506,7 +536,7 @@ public class MainActivity extends MyAppCompatActivity {
         jsonParams.put("queue", "TWEET");
         jsonParams.put("method", "tweet");
         jsonParams.put("tweet_text", tweet);
-        jsonParams.put("creator_id", userId+"");
+        jsonParams.put("session_id", sessionId);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
