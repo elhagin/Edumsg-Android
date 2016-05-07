@@ -301,7 +301,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.tweetBlurLayout.toggleHover();
+//                holder.tweetBlurLayout.toggleHover();
                 if (holder.repliesLayout.getVisibility() == View.VISIBLE) {
                     holder.repliesLayout.setVisibility(View.GONE);
                 } else {

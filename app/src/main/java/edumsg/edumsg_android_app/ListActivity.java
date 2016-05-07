@@ -104,6 +104,7 @@ public class ListActivity extends MyAppCompatActivity {
                                 jsonParams.put("queue", "LIST");
                                 jsonParams.put("method", "get_list_feeds");
                                 jsonParams.put("list_id", listId+"");
+                                jsonParams.put("session_id", MyAppCompatActivity.sessionId);
                                 JSONObject jsonRequest = new JSONObject(jsonParams);
                                 JsonObjectRequest jsonObjectRequest4 = new JsonObjectRequest(Request.Method.POST,
                                         requestUrl, jsonRequest, new Response.Listener<JSONObject>() {

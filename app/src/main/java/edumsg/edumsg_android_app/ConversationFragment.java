@@ -136,6 +136,7 @@ public class ConversationFragment extends Fragment {
             requestParams.put("queue", "DM");
             requestParams.put("method", "get_conv");
             requestParams.put("conv_id", convId);
+            requestParams.put("session_id", MyAppCompatActivity.sessionId);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                     MainActivity.requestUrl, requestParams, new Response.Listener<JSONObject>() {
                 @Override

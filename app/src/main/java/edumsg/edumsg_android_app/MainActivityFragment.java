@@ -81,6 +81,7 @@ public class MainActivityFragment extends Fragment {
         jsonParams.put("queue", "TWEET");
         jsonParams.put("method", "get_replies");
         jsonParams.put("tweet_id", tweetId + "");
+        jsonParams.put("session_id", MyAppCompatActivity.sessionId);
         JSONObject jsonRequest = new JSONObject(jsonParams);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
                 MainActivity.requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
