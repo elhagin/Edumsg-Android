@@ -55,6 +55,10 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 
+/**
+ * Allows the user to log in using a username and password. If successful, starts a {@link MainActivity},
+ * putting the username and sessionId in the intent extras.
+ */
 public class LoginFragment extends AppCompatDialogFragment implements View.OnClickListener{
 
     @Bind(R.id.username) EditText mUsername;

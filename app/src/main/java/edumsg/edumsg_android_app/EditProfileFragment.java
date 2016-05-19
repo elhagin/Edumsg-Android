@@ -33,6 +33,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * A fragment that provides the user with many views that allow the user to edit their info.
+ */
 public class EditProfileFragment extends Fragment {
     private User user;
     private JSONObject requestParams;

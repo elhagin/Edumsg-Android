@@ -22,11 +22,25 @@ import net.steamcrafted.loadtoast.LoadToast;
 import org.json.JSONObject;
 
 import java.util.*;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Displays a timeline of a list which contains all tweets and retweets created by this list's members.
+ */
 public class ListActivity extends MyAppCompatActivity {
+    /**
+     * listId: ID of current list
+     tweetObjects: A {@link List} of type {@link Tweet} which represents the tweets in the news feed.
+     * rvAdapter: An instance of the class {@link RVAdapter} which is a custom made RecyclerView
+     * Adapter to display each tweet's view.
+     * retweets: An {@link ArrayList} that contains all the current logged in user's retweets' IDs.
+     * It is used to set the correct button states for previously retweeted tweets.
+     * favorites: An {@link ArrayList} that contains all the current logged in user's favorites' IDs.
+     * It is used to set the correct button states for previously favorited tweets.
+     */
     private int listId;
     private String listName;
     private java.util.List<Tweet> tweetObjects;
@@ -41,7 +55,7 @@ public class ListActivity extends MyAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         ButterKnife.bind(this);
-        userId = getIntent().getIntExtra("userId", -1);
+//        userId = getIntent().getIntExtra("userId", -1);
         listId = getIntent().getIntExtra("listId", -1);
         listName = getIntent().getStringExtra("listName");
 
@@ -70,7 +84,7 @@ public class ListActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams2 = new HashMap<>();
         jsonParams2.put("queue", "USER");
         jsonParams2.put("method", "get_retweets");
-        jsonParams2.put("user_id", userId + "");
+        jsonParams2.put("session_id", sessionId);
         JSONObject jsonRequest2 = new JSONObject(jsonParams2);
         JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.POST,
                 requestUrl, jsonRequest2, new Response.Listener<JSONObject>() {
@@ -87,7 +101,7 @@ public class ListActivity extends MyAppCompatActivity {
                     Map<String, String> jsonParams = new HashMap<>();
                     jsonParams.put("queue", "USER");
                     jsonParams.put("method", "get_favorites");
-                    jsonParams.put("user_id", userId+"");
+                    jsonParams.put("user_id", sessionId);
                     JSONObject jsonRequest = new JSONObject(jsonParams);
                     JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(Request.Method.POST,
                             requestUrl, jsonRequest, new Response.Listener<JSONObject>() {

@@ -45,9 +45,13 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 
+/**
+ * Starts a {@link LoginFragment} which can use this Activity to start a {@link RegisterFragment}
+ * if needed.
+ */
 public class AuthActivity extends MyAppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener
 {
-    MyPagerAdapter pagerAdapter;
+//    MyPagerAdapter pagerAdapter;
 //    @Bind(R.id.pager) ViewPager mPager;
 //    @Bind(R.id.tab_layout) TabLayout tabLayout;
     @BindColor(R.color.colorPrimary) int cPrimary;
@@ -94,29 +98,29 @@ public class AuthActivity extends MyAppCompatActivity implements LoginFragment.O
 //                loginFragment.show(fragmentManager, "LoginFragment");
     }
 
-    public static class MyPagerAdapter extends FragmentPagerAdapter
-    {
-        java.util.List<String> fragments;
-        Context context;
-
-        public MyPagerAdapter(FragmentManager fragmentManager, Context context) {
-            super(fragmentManager);
-            this.context = context;
-            fragments = new ArrayList<>();
-            fragments.add(LoginFragment.class.getName());
-            fragments.add(RegisterFragment.class.getName());
-        }
-        @Override
-        public Fragment getItem(int position) {
-            return Fragment.instantiate(context, fragments.get(position));
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-    }
-
+//    public static class MyPagerAdapter extends FragmentPagerAdapter
+//    {
+//        java.util.List<String> fragments;
+//        Context context;
+//
+//        public MyPagerAdapter(FragmentManager fragmentManager, Context context) {
+//            super(fragmentManager);
+//            this.context = context;
+//            fragments = new ArrayList<>();
+//            fragments.add(LoginFragment.class.getName());
+//            fragments.add(RegisterFragment.class.getName());
+//        }
+//        @Override
+//        public Fragment getItem(int position) {
+//            return Fragment.instantiate(context, fragments.get(position));
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return fragments.size();
+//        }
+//    }
+//
     @Override
     public void onFragmentInteraction(Uri uri) {
 

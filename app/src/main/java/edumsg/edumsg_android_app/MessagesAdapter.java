@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Omar on 22/2/2016.
+ * Creates a View for each item in {@link MessagesActivity#recyclerView}
  */
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
 

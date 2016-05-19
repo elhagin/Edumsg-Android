@@ -33,7 +33,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Used to show all replies to a tweet.
  */
 public class MainActivityFragment extends Fragment {
     @Bind(R.id.replies_recycler_view) RecyclerView recyclerView;

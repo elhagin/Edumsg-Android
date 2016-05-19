@@ -23,6 +23,8 @@ import butterknife.ButterKnife;
 
 /**
  * Created by omarelhagin on 2/4/16.
+ *
+ * Creates a View for each item in {@link ConversationFragment#conversationRV}
  */
 public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {

@@ -52,6 +52,10 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 
+/**
+ * Allows the user to register using a username, password, email, and name. If successful, starts a {@link MainActivity},
+ * putting the username and sessionId in the intent extras.
+ */
 public class RegisterFragment extends AppCompatDialogFragment {
 
     @Bind(R.id.email) EditText mEmail;

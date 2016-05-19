@@ -67,18 +67,21 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
         @Bind(R.id.replies) RelativeLayout repliesLayout;
         @Bind(R.id.reply1) TextView reply1;
         @Bind(R.id.user_image_1) ImageView replyUserImg1;
+        @Bind(R.id.creator_info_1) TextView replyCreatorInfo1;
         @Bind(R.id.reply_button_1) ImageButton replyBtn1;
         @Bind(R.id.retweet_button_1) ImageButton retweetBtn1;
         @Bind(R.id.favorite_button_1) ImageButton favoriteBtn1;
         @Bind(R.id.replyLayout2) RelativeLayout replyLayout2;
         @Bind(R.id.reply2) TextView reply2;
         @Bind(R.id.user_image_2) ImageView replyUserImg2;
+        @Bind(R.id.creator_info_2) TextView replyCreatorInfo2;
         @Bind(R.id.reply_button_2) ImageButton replyBtn2;
         @Bind(R.id.retweet_button_2) ImageButton retweetBtn2;
         @Bind(R.id.favorite_button_2) ImageButton favoriteBtn2;
         @Bind(R.id.replyLayout3) RelativeLayout replyLayout3;
         @Bind(R.id.reply3) TextView reply3;
         @Bind(R.id.user_image_3) ImageView replyUserImg3;
+        @Bind(R.id.creator_info_3) TextView replyCreatorInfo3;
         @Bind(R.id.reply_button_3) ImageButton replyBtn3;
         @Bind(R.id.retweet_button_3) ImageButton retweetBtn3;
         @Bind(R.id.favorite_button_3) ImageButton favoriteBtn3;
@@ -329,6 +332,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                     if (!replies.isEmpty()) {
                                         Tweet firstReply = replies.get(0);
                                         holder.reply1.setText(firstReply.getTweet());
+                                        String info = context.getString(R.string.user_info,
+                                                firstReply.getCreator().getName(),
+                                                firstReply.getCreator().getUsername());
+                                        holder.replyCreatorInfo1.setText(info);
                                         Picasso.with(context).load(firstReply.getCreator().getAvatar_url())
                                                 .placeholder(R.mipmap.ic_launcher).fit()
                                                 .into(holder.replyUserImg1);
@@ -338,6 +345,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                         if (replies.size() > 1) {
                                             Tweet secondReply = replies.get(1);
                                             holder.reply2.setText(secondReply.getTweet());
+                                            info = context.getString(R.string.user_info,
+                                                    secondReply.getCreator().getName(),
+                                                    secondReply.getCreator().getUsername());
+                                            holder.replyCreatorInfo2.setText(info);
                                             Picasso.with(context).load(secondReply.getCreator().getAvatar_url())
                                                     .placeholder(R.mipmap.ic_launcher).fit()
                                                     .into(holder.replyUserImg2);
@@ -348,6 +359,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
                                         if (replies.size() > 2) {
                                             Tweet thirdReply = replies.get(2);
                                             holder.reply3.setText(thirdReply.getTweet());
+                                            info = context.getString(R.string.user_info,
+                                                    thirdReply.getCreator().getName(),
+                                                    thirdReply.getCreator().getUsername());
+                                            holder.replyCreatorInfo3.setText(info);
                                             Picasso.with(context).load(thirdReply.getCreator().getAvatar_url())
                                                     .placeholder(R.mipmap.ic_launcher).fit()
                                                     .into(holder.replyUserImg3);

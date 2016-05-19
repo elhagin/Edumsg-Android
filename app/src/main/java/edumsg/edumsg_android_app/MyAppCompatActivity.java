@@ -7,6 +7,8 @@ import com.android.volley.toolbox.Volley;
 
 /**
  * Created by omarelhagin on 27/3/16.
+ *
+ * Base class for all activites.
  */
 public class MyAppCompatActivity extends AppCompatActivity {
 

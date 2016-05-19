@@ -48,8 +48,27 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Contains a user's image, bio, and timeline. The timeline contains all tweets and retweets
+ * created by the user.
+ */
 public class ProfileActivity extends MyAppCompatActivity {
 
+    /**
+     * tweetObjects: A {@link List} of type {@link Tweet} which represents the tweets in the timeline.
+     * rvAdapter: An instance of the class {@link RVAdapter} which is a custom made RecyclerView
+     * Adapter to display each tweet's view.
+     * creatorId: The ID of the user that the profile belongs to. If a value of -2 is found then
+     * the profile of the current logged in user is fetched, otherwise the profile of the user
+     * requested is fetched, which can be accomplished by clicking on any user's profile picture
+     * in the news feed.
+     * favorites: An {@link ArrayList} that contains all the current logged in user's favorites' IDs.
+     * It is used to set the correct button states for previously favorited tweets.
+     * followers: An {@link ArrayList} that contains all the user's followers. This is used to check if
+     * this user is already followed by the logged in user, and sets the follow/unfollow button's state appropriately.
+     * owner: A boolean value indicating whether this profile belongs to the logged in user or not.
+     * isFollowed: A boolean value indicating whether this user is followed by the logged in user or not.
+     */
     private List<Tweet> tweetObjects;
     private RVAdapter rvAdapter;
     private int creatorId;

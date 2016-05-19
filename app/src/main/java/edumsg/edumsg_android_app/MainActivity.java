@@ -47,8 +47,22 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 
+/**
+ * Provides the home page for a user, which contains a news feed of tweets and an action bar.
+ */
+
 public class MainActivity extends MyAppCompatActivity {
 
+    /**
+     * tweetObjects: A {@link List} of type {@link Tweet} which represents the tweets in the news feed.
+     * rvAdapter: An instance of the class {@link RVAdapter} which is a custom made RecyclerView
+     * Adapter to display each tweet's view.
+     * retweets: An {@link ArrayList} that contains all the current logged in user's retweets' IDs.
+     * It is used to set the correct button states for previously retweeted tweets.
+     * favorites: An {@link ArrayList} that contains all the current logged in user's favorites' IDs.
+     * It is used to set the correct button states for previously favorited tweets.
+     * The remaining properties are view look-ups used to reference view elements in the XML layout file.
+     */
     private List<Tweet> tweetObjects;
     private RVAdapter rvAdapter;
     private ArrayList retweets;
@@ -57,11 +71,17 @@ public class MainActivity extends MyAppCompatActivity {
     @Bind(R.id.my_toolbar) Toolbar toolbar;
     @Bind(R.id.refresh) SwipeRefreshLayout swipeRefreshLayout;
     @Bind(R.id.tweets_recycler_view) RecyclerView recyclerView;
-//    @Bind(R.id.btn_home) ImageButton homeButton;
-//    @Bind(R.id.btn_search) ImageButton searchButton;
-//    @Bind(R.id.btn_create) ImageButton createButton;
-//    @Bind(R.id.btn_nav) ImageButton navButton;
 
+    /**
+     *
+     * The onCreate method first retrieves the sessionId and username from the parent {@link android.content.Intent},
+     * which is either created from a {@link LoginFragment} or a {@link RegisterFragment}. Afterwards,
+     * it configures the action bar and performs view look-ups for the action bar buttons, followed
+     * by setting the onClick listeners for the action bar buttons. Finally, it initializes the
+     * properties, sets the onRefresh listener for the swipe refresh layout, and calls the method
+     * {@link MainActivity#getFeed()}.
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,6 +238,12 @@ public class MainActivity extends MyAppCompatActivity {
         }
     }
 
+    /**
+     * Creates a {@link JsonObjectRequest} with parameters supplied in a {@link Map<String, String>}.
+     * Two other {@link JsonObjectRequest} are nested within the {@link com.android.volley.Response.Listener#onResponse(Object)}
+     * callback method. First it retrieves the user's retweets, then their favorites, finally their
+     * timeline.
+     */
     private void getFeed()
     {
         final LoadToast loadToast = new LoadToast(this);
@@ -424,106 +450,12 @@ public class MainActivity extends MyAppCompatActivity {
         getVolleyRequestQueue().add(jsonObjectRequest2);
     }
 
-//    private void getTweets()
-//    {
-//        final LoadToast loadToast = new_user LoadToast(this);
-//        loadToast.setText("Loading...");
-//        loadToast.show();
-//        Map<String, String> jsonParams = new_user HashMap<>();
-//        jsonParams.put("queue", "USER");
-//        jsonParams.put("method", "timeline");
-//        jsonParams.put("user_id", userId+"");
-//        JSONObject jsonRequest = new_user JSONObject(jsonParams);
-//        JsonObjectRequest jsonObjectRequest = new_user JsonObjectRequest(Request.Method.POST,
-//                requestUrl, jsonRequest, new_user Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(final JSONObject response) {
-//                final ObjectMapper mapper = new_user ObjectMapper();
-//                try {
-//                    final Map<String, Object> responseMap = mapper
-//                            .readValue(response.toString(),
-//                                    new_user TypeReference<HashMap<String, Object>>() {
-//                                    });
-//                    if (responseMap.get("code").equals("200"))
-//                    {
-//                        loadToast.success();
-//                        try {
-//                            ArrayList tweetsArray = (ArrayList) responseMap.get("tweets");
-//                            Iterator iterator = tweetsArray.iterator();
-//                            while (iterator.hasNext()) {
-//                                Map<String, Object> tweetJsonObj = mapper
-//                                        .readValue(mapper.writeValueAsString(iterator.next()),
-//                                                new_user TypeReference<HashMap<String, Object>>() {
-//                                                });
-//                                String tweetText = (String) tweetJsonObj.get("tweet_text");
-//                                LinkedHashMap creator = (LinkedHashMap) tweetJsonObj.get("creator");
-//                                String avatarUrl = (String) creator.get("avatar_url");
-//                                Tweet tweetObject = new_user Tweet(userId, avatarUrl,
-//                                        tweetText);
-//                                tweetObjects.add(tweetObject);
-//                            }
-//                            rvAdapter.notifyDataSetChanged();
-//                            if (swipeRefreshLayout.isRefreshing())
-//                            {
-//                                swipeRefreshLayout.setRefreshing(false);
-//                            }
-//                        }
-//                        catch (Exception e)
-//                        {
-//                            Log.e("Getting tweets", e.getMessage());
-//                        }
-//                    }
-//                }
-//                catch (Exception e)
-//                {
-//                    Log.e("JSONMapper", e.getMessage());
-//                }
-//            }
-//        }, new_user Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError volleyError) {
-//                loadToast.error();
-//                if (volleyError.networkResponse != null
-//                        && volleyError.networkResponse.data != null
-//                        && volleyError.networkResponse.statusCode == 400)
-//                {
-//                    try {
-//                        String errorJson = new_user String(volleyError.networkResponse.data);
-//                        JSONObject errorObj = new_user JSONObject(errorJson);
-//                        String error = errorObj.getString("message");
-////                        if (error.toLowerCase().contains("username"))
-////                        {
-////                            mUsername.setError(error);
-////                            mUsername.requestFocus();
-////                        }
-////                        if (error.toLowerCase().contains("password")) {
-////                            mPassword.setError(error);
-////                            mPassword.requestFocus();
-////                        }
-//                    }
-//                    catch (JSONException e)
-//                    {
-//                        Log.e("Response Error Msg", e.getMessage());
-//                    }
-//                }
-//                else {
-//                    Log.e("Volley", volleyError.toString());
-//                }
-//            }
-//        }) {
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new_user HashMap<String, String>();
-//                headers.put("Content-Type", "application/json; charset=utf-8");
-//                //headers.put("User-agent", System.getProperty("http.agent"));
-//                return headers;
-//            };
-//        };
-////        jsonObjectRequest.setRetryPolicy(new_user DefaultRetryPolicy(10000,
-////                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//        getVolleyRequestQueue().add(jsonObjectRequest);
-//    }
-
+    /**
+     * Creates a {@link JsonObjectRequest} that performs the action of creating a tweet,
+     * with parameters supplied in a {@link Map<String, String>}.
+     * @param tweet
+     * A string containing the tweet to be created.
+     */
     private void createTweet(final String tweet)
     {
         final LoadToast loadToast = new LoadToast(this);

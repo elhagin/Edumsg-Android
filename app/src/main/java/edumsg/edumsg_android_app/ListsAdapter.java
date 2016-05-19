@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by omarelhagin on 30/3/16.
+ * Creates a View for each item in {@link ListsActivity#listsRecyclerView}.
  */
 public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListItemViewHolder>
 {

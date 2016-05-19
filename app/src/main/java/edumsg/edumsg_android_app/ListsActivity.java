@@ -43,6 +43,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Shows all lists that the logged in user is subscribed to.
+ */
 public class ListsActivity extends MyAppCompatActivity {
 
     private ArrayList<List> lists;
@@ -102,7 +105,7 @@ public class ListsActivity extends MyAppCompatActivity {
         Map<String, String> jsonParams2 = new HashMap<>();
         jsonParams2.put("queue", "USER");
         jsonParams2.put("method", "get_subscribed_lists");
-        jsonParams2.put("user_id", userId + "");
+        jsonParams2.put("session_id", MyAppCompatActivity.sessionId);
         JSONObject jsonRequest2 = new JSONObject(jsonParams2);
         JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.POST,
                 MainActivity.requestUrl, jsonRequest2, new Response.Listener<JSONObject>() {
@@ -225,7 +228,7 @@ public class ListsActivity extends MyAppCompatActivity {
         jsonParams2.put("method", "create_list");
         jsonParams2.put("name", name);
         jsonParams2.put("description", description);
-        jsonParams2.put("creator_id", userId + "");
+        jsonParams2.put("session_id", sessionId);
         jsonParams2.put("private", isPrivate+"");
         JSONObject jsonRequest2 = new JSONObject(jsonParams2);
         JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.POST,

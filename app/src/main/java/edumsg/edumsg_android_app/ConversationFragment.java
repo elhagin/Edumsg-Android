@@ -42,7 +42,18 @@ import java.util.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * A fragment that is started for each conversation in {@link MessagesActivity#conversations}.
+ */
 public class ConversationFragment extends Fragment {
+    /**
+     * convId: ID of current conversation
+     * messages: A {@link java.util.List} of type {@link DirectMessage}, which contains all the
+     * messages in the conversation.
+     * conversationAdapter: An instance of the class {@link ConversationAdapter} which is a custom made RecyclerView
+     * Adapter to display each message's view.
+     * conversation: An instance of the class {@link Conversation} which contains all the conversation's attributes.
+     */
     private int convId;
     private java.util.List<DirectMessage> messages;
     private ConversationAdapter conversationAdapter;

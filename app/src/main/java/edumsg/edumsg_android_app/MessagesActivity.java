@@ -50,6 +50,10 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
 
+/**
+ * Displays all conversations for the logged in user, showing the last message sent or received in each one.
+ * Also allows the user to send a new message.
+ */
 public class MessagesActivity extends MyAppCompatActivity {
     private int userId;
     private List<Conversation> conversations;
