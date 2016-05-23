@@ -1,5 +1,6 @@
 package edumsg.edumsg_android_app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -39,6 +40,7 @@ import butterknife.ButterKnife;
 public class EditProfileFragment extends Fragment {
     private User user;
     private JSONObject requestParams;
+    OnInfoEditedListener mCallback;
     @Bind(R.id.toolbar_edit_profile) Toolbar toolbar;
     @Bind(R.id.edit_name) TextInputEditText editName;
     @Bind(R.id.edit_language) TextInputEditText editLanguage;
@@ -50,7 +52,25 @@ public class EditProfileFragment extends Fragment {
     @Bind(R.id.edit_background_color) TextInputEditText editBackgroundColor;
     @Bind(R.id.protected_switch) Switch editProtected;
 
+    public interface OnInfoEditedListener {
+        void onInfoEdited(User user);
+    }
+
     public EditProfileFragment() {}
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (OnInfoEditedListener) context;
+        }
+        catch (ClassCastException e)
+        {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +80,7 @@ public class EditProfileFragment extends Fragment {
         try {
             requestParams.put("queue", "USER");
             requestParams.put("method", "update_user");
-            requestParams.put("user_id", user.getId().toString());
+            requestParams.put("session_id", MyAppCompatActivity.sessionId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -302,14 +322,20 @@ public class EditProfileFragment extends Fragment {
                                     .getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(getActivity().getWindow()
                                     .getDecorView().getRootView().getWindowToken(), 0);
+                            User user = new User();
                             if (requestParams.has("name"))
-                                ((ProfileActivity) getActivity())
-                                        .usernameTxt.setText(requestParams.getString("name"));
+                                user.setName(requestParams.getString("name"));
                             if (requestParams.has("avatar_url"))
-                                Picasso.with(getContext()).load(requestParams.getString("avatar_url"))
-                                        .fit().placeholder(R.mipmap.ic_launcher)
-                                        .into(((ProfileActivity) getActivity()).avatar);
-                            getActivity().getSupportFragmentManager().popBackStack();
+                                user.setAvatar_url(requestParams.getString("avatar_url"));
+                            mCallback.onInfoEdited(user);
+//                            if (requestParams.has("name"))
+//                                ((ProfileActivity) getActivity())
+//                                        .usernameTxt.setText(requestParams.getString("name"));
+//                            if (requestParams.has("avatar_url"))
+//                                Picasso.with(getContext()).load(requestParams.getString("avatar_url"))
+//                                        .fit().placeholder(R.mipmap.ic_launcher)
+//                                        .into(((ProfileActivity) getActivity()).avatar);
+//                            getActivity().getSupportFragmentManager().popBackStack();
                         }
                     } catch (Exception e) {
                         loadToast.error();

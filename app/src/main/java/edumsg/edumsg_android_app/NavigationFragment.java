@@ -49,11 +49,6 @@ public class NavigationFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(parentActivity, ProfileActivity.class);
-                intent.putExtra("username", parentActivity.getUsername());
-                intent.putExtra("name", parentActivity.getName());
-                intent.putExtra("avatar_url", parentActivity.getAvatarUrl());
-                intent.putExtra("bio", parentActivity.getBio());
-                intent.putExtra("sessionId", parentActivity.getSessionId());
                 intent.putExtra("creatorId", -2);
                 startActivity(intent);
                 parentActivity.getSupportFragmentManager().popBackStack();

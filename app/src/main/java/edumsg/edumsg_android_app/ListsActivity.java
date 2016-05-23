@@ -1,6 +1,7 @@
 package edumsg.edumsg_android_app;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -41,6 +43,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
@@ -50,6 +53,7 @@ public class ListsActivity extends MyAppCompatActivity {
 
     private ArrayList<List> lists;
     private ListsAdapter listsAdapter;
+    @BindColor(R.color.colorPrimary) int cPrimary;
     @Bind(R.id.lists_rv) RecyclerView listsRecyclerView;
     @Bind(R.id.toolbar_lists) Toolbar toolbar;
 
@@ -211,8 +215,28 @@ public class ListsActivity extends MyAppCompatActivity {
             }
         });
 
-        AlertDialog alertDialog = builder.create();
+        final AlertDialog alertDialog = builder.create();
         alertDialog.setTitle("Create list");
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button posBtn = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                posBtn.setBackgroundColor(cPrimary);
+                posBtn.setTextColor(Color.WHITE);
+                final float scale = getApplicationContext()
+                        .getResources().getDisplayMetrics().density;
+                int pixels = (int) (10 * scale + 0.5f);
+                LinearLayout.LayoutParams layoutParams
+                        = new LinearLayout.LayoutParams
+                        (ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0, 0, pixels, 0);
+                posBtn.setLayoutParams(layoutParams);
+                Button negBtn = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                negBtn.setBackgroundColor(cPrimary);
+                negBtn.setTextColor(Color.WHITE);
+            }
+        });
         alertDialog.show();
     }
 

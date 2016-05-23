@@ -1,7 +1,6 @@
 package edumsg.edumsg_android_app;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -47,12 +46,13 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import edumsg.edumsg_android_app.EditProfileFragment.OnInfoEditedListener;
 
 /**
  * Contains a user's image, bio, and timeline. The timeline contains all tweets and retweets
  * created by the user.
  */
-public class ProfileActivity extends MyAppCompatActivity {
+public class ProfileActivity extends MyAppCompatActivity implements OnInfoEditedListener {
 
     /**
      * tweetObjects: A {@link List} of type {@link Tweet} which represents the tweets in the timeline.
@@ -64,20 +64,22 @@ public class ProfileActivity extends MyAppCompatActivity {
      * in the news feed.
      * favorites: An {@link ArrayList} that contains all the current logged in user's favorites' IDs.
      * It is used to set the correct button states for previously favorited tweets.
-     * followers: An {@link ArrayList} that contains all the user's followers. This is used to check if
+     * followings: An {@link ArrayList} that contains all the user's followings. This is used to check if
      * this user is already followed by the logged in user, and sets the follow/unfollow button's state appropriately.
      * owner: A boolean value indicating whether this profile belongs to the logged in user or not.
      * isFollowed: A boolean value indicating whether this user is followed by the logged in user or not.
+     * profileUsername: The username that belongs to the user who is the owner of the current profile.
      */
     private List<Tweet> tweetObjects;
     private RVAdapter rvAdapter;
     private int creatorId;
     private ArrayList favorites;
-    private ArrayList followers;
+    private ArrayList followings;
     private boolean owner;
     private boolean isFollowed;
     private LoadToast loading;
     private User user;
+    private String profileUsername;
     @Bind(R.id.toolbar_profile) Toolbar toolbar;
     @Bind(R.id.timeline_recycler_view) RecyclerView recyclerView;
     @Bind(R.id.refresh_profile) SwipeRefreshLayout swipeRefreshLayout;
@@ -90,19 +92,10 @@ public class ProfileActivity extends MyAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        username = getIntent().getStringExtra("username");
-//        avatarUrl = getIntent().getStringExtra("avatar_url");
-//        name = getIntent().getStringExtra("name");
-//        bio = getIntent().getStringExtra("bio");
-//        userId = getIntent().getIntExtra("userId", -1);
+        profileUsername = getIntent().getStringExtra("username");
         creatorId = getIntent().getIntExtra("creatorId", -1);
-        sessionId = getIntent().getStringExtra("sessionId");
         if (creatorId == -2)
             owner = true;
-//        userId = 1;
-//        avatarUrl = "http://i.imgur.com/hYg5OfG.jpg";
-//        name = "Omar ElHagin";
-//        bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis congue lorem ac dictum. In aliquam ultricies neque in lacinia. Phasellus gravida metus.";
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
 
@@ -144,7 +137,6 @@ public class ProfileActivity extends MyAppCompatActivity {
         }
         getUser();
 
-        bioEditText.setText(bio);
         bioEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -198,87 +190,76 @@ public class ProfileActivity extends MyAppCompatActivity {
                 final FragmentManager fragmentManager = getSupportFragmentManager();
                 final EditProfileFragment editProfileFragment = new EditProfileFragment();
                 final Bundle bundle = new Bundle();
-                if (user == null)
-                {
-                    Map<String, String> jsonParams = new HashMap<>();
-                    jsonParams.put("queue", "USER");
-                    jsonParams.put("method", "get_user");
-                    jsonParams.put("user_id", creatorId + "");
-                    JSONObject jsonRequest = new JSONObject(jsonParams);
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-                            requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(final JSONObject response) {
-                            final ObjectMapper mapper = new ObjectMapper();
-                            try {
-                                final Map<String, Object> responseMap = mapper
-                                        .readValue(response.toString(),
-                                                new TypeReference<HashMap<String, Object>>() {
-                                                });
-                                if (responseMap.get("code").equals("200")
-                                        && responseMap.get("method").equals("get_user"))
-                                {
-                                    user = mapper.readValue(response.get("user").toString(),
-                                            new TypeReference<User>() {
-
+                Map<String, String> jsonParams = new HashMap<>();
+                jsonParams.put("queue", "USER");
+                jsonParams.put("method", "get_user2");
+                jsonParams.put("username", username);
+                JSONObject jsonRequest = new JSONObject(jsonParams);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+                        requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(final JSONObject response) {
+                        final ObjectMapper mapper = new ObjectMapper();
+                        try {
+                            final Map<String, Object> responseMap = mapper
+                                    .readValue(response.toString(),
+                                            new TypeReference<HashMap<String, Object>>() {
                                             });
-                                    bundle.putParcelable("user", user);
-                                    editProfileFragment.setArguments(bundle);
-                                    fragmentManager.beginTransaction()
-                                            .add(android.R.id.content, editProfileFragment).addToBackStack("edit")
-                                            .commit();
-                                }
-                            }
-                            catch (Exception e)
+                            if (responseMap.get("code").equals("200")
+                                    && responseMap.get("method").equals("get_user2"))
                             {
-                                Log.e("JSONMapper", e.getMessage());
+                                user = mapper.readValue(response.get("user").toString(),
+                                        new TypeReference<User>() {
+
+                                        });
+                                bundle.putParcelable("user", user);
+                                editProfileFragment.setArguments(bundle);
+                                fragmentManager.beginTransaction()
+                                        .add(android.R.id.content, editProfileFragment).addToBackStack("edit")
+                                        .commit();
                             }
                         }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            loading.error();
-                            if (volleyError.networkResponse != null
-                                    && volleyError.networkResponse.data != null
-                                    && volleyError.networkResponse.statusCode == 400)
-                            {
-                                try {
-                                    String errorJson = new String(volleyError.networkResponse.data);
-                                    JSONObject errorObj = new JSONObject(errorJson);
-                                    String error = errorObj.getString("message");
-                                    Log.e("Error from server", error);
-                                }
-                                catch (JSONException e)
-                                {
-                                    Log.e("Response Error Msg", e.getMessage());
-                                }
+                        catch (Exception e)
+                        {
+                            Log.e("JSONMapper", e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        loading.error();
+                        if (volleyError.networkResponse != null
+                                && volleyError.networkResponse.data != null
+                                && volleyError.networkResponse.statusCode == 400)
+                        {
+                            try {
+                                String errorJson = new String(volleyError.networkResponse.data);
+                                JSONObject errorObj = new JSONObject(errorJson);
+                                String error = errorObj.getString("message");
+                                Log.e("Error from server", error);
                             }
-                            else {
-                                Log.e("Volley", volleyError.toString());
+                            catch (JSONException e)
+                            {
+                                Log.e("Response Error Msg", e.getMessage());
                             }
                         }
-                    }) {
-                        @Override
-                        public Map<String, String> getHeaders() throws AuthFailureError {
-                            HashMap<String, String> headers = new HashMap<String, String>();
-                            headers.put("Content-Type", "application/json; charset=utf-8");
-                            //headers.put("User-agent", System.getProperty("http.agent"));
-                            return headers;
-                        };
-                    };
-                    jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
-                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                    jsonObjectRequest.setTag(TAG);
-                    getVolleyRequestQueue().add(jsonObjectRequest);
-                }
-                else
-                {
-                    bundle.putParcelable("user", user);
-                    editProfileFragment.setArguments(bundle);
-                    fragmentManager.beginTransaction()
-                            .add(android.R.id.content, editProfileFragment).addToBackStack("edit")
-                            .commit();
-                }
+                        else {
+                            Log.e("Volley", volleyError.toString());
+                        }
+                    }
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Content-Type", "application/json; charset=utf-8");
+                        //headers.put("User-agent", System.getProperty("http.agent"));
+                        return headers;
+                    }
+                };
+                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                jsonObjectRequest.setTag(TAG);
+                getVolleyRequestQueue().add(jsonObjectRequest);
                 break;
             case R.id.home_btn:
                 finish();
@@ -287,6 +268,7 @@ public class ProfileActivity extends MyAppCompatActivity {
 
         return true;
     }
+//1
 
     private void getUser()
     {
@@ -411,7 +393,7 @@ public class ProfileActivity extends MyAppCompatActivity {
                         favorites = (ArrayList) responseMap.get("favorites");
                         Map<String, String> jsonParams = new HashMap<>();
                         jsonParams.put("queue", "USER");
-                        jsonParams.put("method", "followers");
+                        jsonParams.put("method", "following");
                         jsonParams.put("session_id", sessionId);
                         JSONObject jsonRequest = new JSONObject(jsonParams);
                         JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.POST,
@@ -426,13 +408,21 @@ public class ProfileActivity extends MyAppCompatActivity {
                                                     });
                                     if (responseMap.get("code").equals("200"))
                                     {
-                                        followers = (ArrayList) responseMap.get("followers");
+                                        followings = (ArrayList) responseMap.get("following");
                                         if (!owner)
-                                            checkIfFollowed(followers);
+                                            checkIfFollowed(followings);
                                         Map<String, String> jsonParams = new HashMap<>();
                                         jsonParams.put("queue", "USER");
-                                        jsonParams.put("method", "user_tweets");
-                                        jsonParams.put("session_id", sessionId);
+                                        if (owner)
+                                        {
+                                            jsonParams.put("method", "user_tweets");
+                                            jsonParams.put("session_id", sessionId);
+                                        }
+                                        else
+                                        {
+                                            jsonParams.put("method", "user_tweets2");
+                                            jsonParams.put("username", profileUsername);
+                                        }
                                         JSONObject jsonRequest = new JSONObject(jsonParams);
                                         JsonObjectRequest jsonObjectRequest4 = new JsonObjectRequest(Request.Method.POST,
                                                 requestUrl, jsonRequest, new Response.Listener<JSONObject>() {
@@ -961,7 +951,7 @@ public class ProfileActivity extends MyAppCompatActivity {
                                 new TypeReference<HashMap<String, Object>>() {
                                 });
                 String usernameInMap = (String) userObj.get("username");
-                if (username.equals(usernameInMap))
+                if (profileUsername.equals(usernameInMap))
                 {
                     isFollowed = true;
                     break;
@@ -993,5 +983,20 @@ public class ProfileActivity extends MyAppCompatActivity {
             });
         }
         doneBtn.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onInfoEdited(User user) {
+        if (user.getName() != null)
+            usernameTxt.setText(user.getName());
+        if (user.getAvatar_url() != null)
+            Picasso.with(this).load(user.getAvatar_url())
+                    .fit().placeholder(R.mipmap.ic_launcher)
+                    .into(avatar);
+        int i = tweetObjects.size();
+        tweetObjects.clear();
+        rvAdapter.notifyItemRangeRemoved(0, i);
+        getTimeline();
+        getSupportFragmentManager().popBackStack();
     }
 }

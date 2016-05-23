@@ -112,6 +112,7 @@ public class MainActivityFragment extends Fragment {
                             String avatarUrl = (String) creatorMap.get("avatar_url");
                             User creator = new User();
                             creator.setId(creatorId);
+                            creator.setName((String) creatorMap.get("name"));
                             creator.setUsername((String) creatorMap.get("username"));
                             creator.setAvatar_url(avatarUrl);
                             final Tweet tweetObject = new Tweet(tweetId, creator, tweetText);

@@ -151,12 +151,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
             public void onClick(View v) {
                 MyAppCompatActivity main = (MyAppCompatActivity) context;
                 Intent intent = new Intent(main, ProfileActivity.class);
-                intent.putExtra("username", MyAppCompatActivity.username);
-                intent.putExtra("name", main.getName());
-                intent.putExtra("avatar_url", main.getAvatarUrl());
-                intent.putExtra("bio", main.getBio());
+                intent.putExtra("username", tweetObject.getCreator().getUsername());
+//                intent.putExtra("name", tweetObject.getCreator().getName());
+//                intent.putExtra("avatar_url", tweetObject.getCreator().getAvatar_url());
+//                intent.putExtra("bio", tweetObject.getCreator().getBio());
                 intent.putExtra("creatorId", tweetObject.getCreator().getId());
-                intent.putExtra("sessionId", main.getSessionId());
                 main.startActivity(intent);
             }
         });

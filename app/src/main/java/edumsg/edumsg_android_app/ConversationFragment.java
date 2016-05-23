@@ -53,11 +53,13 @@ public class ConversationFragment extends Fragment {
      * conversationAdapter: An instance of the class {@link ConversationAdapter} which is a custom made RecyclerView
      * Adapter to display each message's view.
      * conversation: An instance of the class {@link Conversation} which contains all the conversation's attributes.
+     * mCallback: An interface that allows communication between this fragment and its parent activity.
      */
     private int convId;
     private java.util.List<DirectMessage> messages;
     private ConversationAdapter conversationAdapter;
     private Conversation conversation;
+    private OnMessageSentListener mCallback;
     @Bind(R.id.conv_recycler_view)
     RecyclerView conversationRV;
     @Bind(R.id.chat_edit_text1)
@@ -66,7 +68,26 @@ public class ConversationFragment extends Fragment {
     ImageView sendBtn;
 //    private int userId;
 
+    public interface OnMessageSentListener
+    {
+        void onMessageSent();
+    }
+
     public ConversationFragment() {}
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (OnMessageSentListener) context;
+        }
+        catch (ClassCastException e)
+        {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -219,6 +240,7 @@ public class ConversationFragment extends Fragment {
                                     });
                     if (responseMap.get("code").equals("200")) {
                         getConversation();
+                        mCallback.onMessageSent();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

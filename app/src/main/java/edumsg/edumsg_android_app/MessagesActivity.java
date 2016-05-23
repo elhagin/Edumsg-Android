@@ -49,12 +49,13 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
+import edumsg.edumsg_android_app.ConversationFragment.OnMessageSentListener;
 
 /**
  * Displays all conversations for the logged in user, showing the last message sent or received in each one.
  * Also allows the user to send a new message.
  */
-public class MessagesActivity extends MyAppCompatActivity {
+public class MessagesActivity extends MyAppCompatActivity implements OnMessageSentListener {
     private int userId;
     private List<Conversation> conversations;
     private RequestQueue mRequestQueue;
@@ -349,10 +350,10 @@ public class MessagesActivity extends MyAppCompatActivity {
         pixels = (int) (80 * scale + 0.5f);
         ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(pixels,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        pixels = (int) (20 * scale + 0.5f);
+        pixels = (int) (10 * scale + 0.5f);
         layoutParams.rightMargin = pixels;
         sendBtn.setLayoutParams(layoutParams);
-        layoutParams.rightMargin = 0;
+        layoutParams.rightMargin = pixels;
         cancelBtn.setLayoutParams(layoutParams);
         cancelBtn.setText(getString(R.string.action_cancel));
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -377,14 +378,13 @@ public class MessagesActivity extends MyAppCompatActivity {
                 });
             }
         });
-
         LinearLayout buttons = new LinearLayout(MessagesActivity.this);
         buttons.setOrientation(LinearLayout.HORIZONTAL);
-        buttons.addView(sendBtn, 0);
-        buttons.addView(cancelBtn, 1);
+        buttons.addView(cancelBtn, 0);
+        buttons.addView(sendBtn, 1);
         LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(android.app.ActionBar.LayoutParams.WRAP_CONTENT,
                 android.app.ActionBar.LayoutParams.WRAP_CONTENT);
-        layoutParams1.gravity = Gravity.LEFT;
+        layoutParams1.gravity = Gravity.RIGHT;
         buttons.setLayoutParams(layoutParams1);
         linearLayout.addView(buttons, 2);
     }
@@ -467,5 +467,13 @@ public class MessagesActivity extends MyAppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsonObjectRequest2.setTag("Request");
         getVolleyRequestQueue().add(jsonObjectRequest2);
+    }
+
+    @Override
+    public void onMessageSent() {
+        int i = conversations.size();
+        conversations.clear();
+        messagesAdapter.notifyItemRangeRemoved(0, i);
+        getMessages();
     }
 }

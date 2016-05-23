@@ -18,7 +18,7 @@ public class MyAppCompatActivity extends AppCompatActivity {
     String name;
     String bio;
     protected static String sessionId;
-    public static final String requestUrl = "http://10.0.3.2:8080/";
+    public static final String requestUrl = "http://10.0.2.2:8080/";
     RequestQueue mRequestQueue;
     static final String TAG = "Request";
 

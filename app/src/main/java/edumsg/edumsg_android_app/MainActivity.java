@@ -1,5 +1,8 @@
 package edumsg.edumsg_android_app;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,11 +14,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -93,14 +98,21 @@ public class MainActivity extends MyAppCompatActivity {
         final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
                 R.layout.menu_main, null
         );
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(actionBarLayout);
         ImageButton homeButton = ButterKnife.findById(actionBarLayout, R.id.btn_home);
-        ImageButton searchButton = ButterKnife.findById(actionBarLayout, R.id.btn_search);
+        final ImageButton searchButton = ButterKnife.findById(actionBarLayout, R.id.btn_search);
         ImageButton createButton = ButterKnife.findById(actionBarLayout, R.id.btn_create);
         ImageButton navButton = ButterKnife.findById(actionBarLayout, R.id.btn_nav);
+
+        final ViewGroup searchLayout = (ViewGroup) getLayoutInflater().inflate(
+                R.layout.menu_search, null
+        );
+        final SearchView searchView = ButterKnife.findById(searchLayout, R.id.search);
+        final ImageButton backBtn = ButterKnife.findById(searchLayout, R.id.btn_back);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +124,26 @@ public class MainActivity extends MyAppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                actionBar.setCustomView(searchLayout);
+                SearchManager searchManager =
+                        (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(
+                        new ComponentName(MainActivity.this, SearchResultsActivity.class)));
+                searchView.setQuery("", false);
+                searchView.setIconified(false);
+                searchView.setFocusable(true);
+                searchView.requestFocusFromTouch();
+            }
+        });
 
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setCustomView(actionBarLayout);
+                InputMethodManager imm = (InputMethodManager) getApplicationContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(MainActivity.this.getWindow()
+                        .getDecorView().getRootView().getWindowToken(), 0);
             }
         });
 
