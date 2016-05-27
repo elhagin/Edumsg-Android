@@ -14,6 +14,9 @@ package edumsg.edumsg_android_app;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * ORM class for mapping between JSON and Java.
+ */
 public class User implements Parcelable {
 	private Integer id;
 	private String username;

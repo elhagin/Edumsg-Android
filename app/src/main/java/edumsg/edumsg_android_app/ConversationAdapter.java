@@ -22,12 +22,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by omarelhagin on 2/4/16.
- *
  * Creates a View for each item in {@link ConversationFragment#conversationRV}
+ *
+ * Created by omarelhagin on 2/4/16.
  */
 public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+    /**
+     * Custom ViewHolder implementation of {@link android.support.v7.widget.RecyclerView.ViewHolder}
+     * to represent the view for received messages.
+     */
     public static class ReceivedViewHolder extends RecyclerView.ViewHolder
     {
         @Bind(R.id.received_username)
@@ -43,6 +47,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ButterKnife.bind(this, itemView);
         }
     }
+
+    /**
+     * Custom ViewHolder implementation of {@link android.support.v7.widget.RecyclerView.ViewHolder}
+     * to represent the view for sent messages.
+     */
     public static class SentViewHolder extends RecyclerView.ViewHolder
     {
         //        @Bind(R.id.user_img)

@@ -17,6 +17,9 @@ import android.os.Parcelable;
 
 import java.sql.Timestamp;
 
+/**
+ * ORM class for mapping between JSON and Java.
+ */
 @SuppressWarnings("unused")
 public class DirectMessage implements Parcelable, Comparable {
 	private Integer id;

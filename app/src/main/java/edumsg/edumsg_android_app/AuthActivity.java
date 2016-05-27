@@ -49,7 +49,7 @@ import butterknife.ButterKnife;
  * Starts a {@link LoginFragment} which can use this Activity to start a {@link RegisterFragment}
  * if needed.
  */
-public class AuthActivity extends MyAppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener
+public class AuthActivity extends MyAppCompatActivity
 {
 //    MyPagerAdapter pagerAdapter;
 //    @Bind(R.id.pager) ViewPager mPager;
@@ -121,10 +121,6 @@ public class AuthActivity extends MyAppCompatActivity implements LoginFragment.O
 //        }
 //    }
 //
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate

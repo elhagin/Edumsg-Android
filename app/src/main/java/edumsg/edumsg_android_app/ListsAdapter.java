@@ -15,11 +15,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by omarelhagin on 30/3/16.
  * Creates a View for each item in {@link ListsActivity#listsRecyclerView}.
+ *
+ * Created by omarelhagin on 30/3/16.
  */
 public class ListsAdapter extends RecyclerView.Adapter<ListsAdapter.ListItemViewHolder>
 {
+    /**
+     * Custom ViewHolder implementation of {@link android.support.v7.widget.RecyclerView.ViewHolder}
+     * to represent the view for each list item.
+     */
     public static class ListItemViewHolder extends RecyclerView.ViewHolder
     {
         @Bind(R.id.list_item_layout) RelativeLayout listItemLayout;

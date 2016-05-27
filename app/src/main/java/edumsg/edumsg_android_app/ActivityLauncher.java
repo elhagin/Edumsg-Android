@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * Unused class. Purpose was to persist logged in user but not implemented.
+ */
+
 public class ActivityLauncher extends AppCompatActivity {
 
     @Override

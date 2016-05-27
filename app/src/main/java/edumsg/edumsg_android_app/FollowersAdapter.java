@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.*;
 
 /**
- * Created by omarelhagin on 29/3/16.
  * Used to populate the {@link AutoCompleteTextView} in {@link MessagesActivity}'s send message dialog.
  *
+ * Created by omarelhagin on 29/3/16.
  */
 public class FollowersAdapter extends ArrayAdapter<User>
 {

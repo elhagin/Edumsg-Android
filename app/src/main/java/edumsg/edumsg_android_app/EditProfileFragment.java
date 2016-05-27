@@ -51,7 +51,9 @@ public class EditProfileFragment extends Fragment {
     @Bind(R.id.edit_link_color) TextInputEditText editLinkColor;
     @Bind(R.id.edit_background_color) TextInputEditText editBackgroundColor;
     @Bind(R.id.protected_switch) Switch editProtected;
-
+    /**
+     * This interface must be implemented by activities that contain this fragment to allow an interaction in this fragment to be communicated to the activity and potentially other fragments contained in that activity.
+     */
     public interface OnInfoEditedListener {
         void onInfoEdited(User user);
     }

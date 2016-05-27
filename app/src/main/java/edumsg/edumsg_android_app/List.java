@@ -14,6 +14,9 @@ package edumsg.edumsg_android_app;
 
 import java.sql.Timestamp;
 
+/**
+ * ORM class for mapping between JSON and Java.
+ */
 @SuppressWarnings("unused")
 public class List {
 	private Integer id;

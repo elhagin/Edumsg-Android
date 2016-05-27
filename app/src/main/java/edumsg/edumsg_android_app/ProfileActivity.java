@@ -50,7 +50,7 @@ import edumsg.edumsg_android_app.EditProfileFragment.OnInfoEditedListener;
 
 /**
  * Contains a user's image, bio, and timeline. The timeline contains all tweets and retweets
- * created by the user.
+ * created by the user. Can spawn an {@link EditProfileFragment}.
  */
 public class ProfileActivity extends MyAppCompatActivity implements OnInfoEditedListener {
 

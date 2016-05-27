@@ -19,10 +19,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * Creates a View for each item in {@link SearchResultsActivity#searchRV}.
+ *
  * Created by omarelhagin on 22/5/16.
  */
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ResultViewHolder> {
 
+    /**
+     * Custom ViewHolder implementation of {@link android.support.v7.widget.RecyclerView.ViewHolder}
+     * to represent the view for each user in the search results.
+     */
     public class ResultViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.result_layout) LinearLayout resultLayout;
         @Bind(R.id.user_image) ImageView userImg;

@@ -15,6 +15,9 @@ package edumsg.edumsg_android_app;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+/**
+ * ORM class for mapping between JSON and Java.
+ */
 @SuppressWarnings("unused")
 public class Conversation implements Comparable {
 	private ArrayList<DirectMessage> dms;

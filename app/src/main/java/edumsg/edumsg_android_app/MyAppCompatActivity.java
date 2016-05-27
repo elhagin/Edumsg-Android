@@ -6,9 +6,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 /**
- * Created by omarelhagin on 27/3/16.
+ * Base class for all activities that contains all variables that need to be shared throughout the application,
+ * and the main Volley request queue.
  *
- * Base class for all activites.
+ * Created by omarelhagin on 27/3/16.
  */
 public class MyAppCompatActivity extends AppCompatActivity {
 

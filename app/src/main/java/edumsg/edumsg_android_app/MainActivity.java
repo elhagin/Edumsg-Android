@@ -59,22 +59,37 @@ import butterknife.ButterKnife;
 public class MainActivity extends MyAppCompatActivity {
 
     /**
-     * tweetObjects: A {@link List} of type {@link Tweet} which represents the tweets in the news feed.
-     * rvAdapter: An instance of the class {@link RVAdapter} which is a custom made RecyclerView
-     * Adapter to display each tweet's view.
-     * retweets: An {@link ArrayList} that contains all the current logged in user's retweets' IDs.
-     * It is used to set the correct button states for previously retweeted tweets.
-     * favorites: An {@link ArrayList} that contains all the current logged in user's favorites' IDs.
-     * It is used to set the correct button states for previously favorited tweets.
-     * The remaining properties are view look-ups used to reference view elements in the XML layout file.
+     * A {@link List} of type {@link Tweet} which represents the tweets in the news feed.
      */
     private List<Tweet> tweetObjects;
+    /**
+     * An instance of the class {@link RVAdapter} which is a custom made RecyclerView adapter to display each tweet's view.
+     */
     private RVAdapter rvAdapter;
+    /**
+     * An {@link ArrayList} that contains all the current logged in user's retweets' IDs. It is used to set the correct button states for previously retweeted tweets.
+     */
     private ArrayList retweets;
+    /**
+     * An {@link ArrayList} that contains all the current logged in user's favorites' IDs.
+     * It is used to set the correct button states for previously favorited tweets.
+     */
     private ArrayList favorites;
+    /**
+     * View look-up used to reference a color in the XML colors file.
+     */
     @BindColor(R.color.colorPrimary) int cPrimary;
+    /**
+     * View look-up used to reference view elements in the XML layout file.
+     */
     @Bind(R.id.my_toolbar) Toolbar toolbar;
+    /**
+     * View look-up used to reference view elements in the XML layout file.
+     */
     @Bind(R.id.refresh) SwipeRefreshLayout swipeRefreshLayout;
+    /**
+     * View look-up used to reference view elements in the XML layout file.
+     */
     @Bind(R.id.tweets_recycler_view) RecyclerView recyclerView;
 
     /**

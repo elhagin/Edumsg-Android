@@ -66,7 +66,7 @@ public class RegisterFragment extends AppCompatDialogFragment {
     @Bind(R.id.toolbar) Toolbar toolbar;
     @BindColor(R.color.colorPrimaryDark) int cPrimDark;
 
-    private OnFragmentInteractionListener mListener;
+//    private OnFragmentInteractionListener mListener;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -109,27 +109,27 @@ public class RegisterFragment extends AppCompatDialogFragment {
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//    }
+//
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mListener = null;
+//    }
 
     private void attemptRegister() {
         mEmail.setError(null);
@@ -354,17 +354,17 @@ public class RegisterFragment extends AppCompatDialogFragment {
         ((AuthActivity) getActivity()).getVolleyRequestQueue().add(jsonObjectRequest);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
+//    /**
+//     * This interface must be implemented by activities that contain this
+//     * fragment to allow an interaction in this fragment to be communicated
+//     * to the activity and potentially other fragments contained in that
+//     * activity.
+//     * <p/>
+//     * See the Android Training lesson <a href=
+//     * "http://developer.android.com/training/basics/fragments/communicating.html"
+//     * >Communicating with Other Fragments</a> for more information.
+//     */
+//    public interface OnFragmentInteractionListener {
+//        void onFragmentInteraction(Uri uri);
+//    }
 }

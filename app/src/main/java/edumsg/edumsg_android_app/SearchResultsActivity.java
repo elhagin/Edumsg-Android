@@ -34,6 +34,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Started from {@link MainActivity} to display search results when a user uses the {@link android.support.v7.widget.SearchView} in {@link MainActivity}'s action bar.
+ */
 public class SearchResultsActivity extends MyAppCompatActivity {
 
     private SearchResultsAdapter searchResultsAdapter;

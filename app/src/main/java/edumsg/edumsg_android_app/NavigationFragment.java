@@ -28,6 +28,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Fragment that contains buttons that allow navigation to different parts of the application.
+ */
 public class NavigationFragment extends Fragment{
 
     @Bind(R.id.profile_button) Button profileBtn;

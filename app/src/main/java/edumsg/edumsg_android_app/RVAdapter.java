@@ -54,10 +54,15 @@ import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
+ * Creates a View for each item in {@link MainActivity#recyclerView}. Also used for {@link ListsActivity#listsRecyclerView} and {@link ProfileActivity#recyclerView}.
  * Created by Omar on 22/2/2016.
  */
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.TweetViewHolder> {
 
+    /**
+     * Custom ViewHolder implementation of {@link android.support.v7.widget.RecyclerView.ViewHolder}
+     * to represent the view for each tweet item, and its earliest 3 replies.
+     */
     public class TweetViewHolder extends RecyclerView.ViewHolder
     {
         @Bind(R.id.tweet_blur_layout) BlurLayout tweetBlurLayout;

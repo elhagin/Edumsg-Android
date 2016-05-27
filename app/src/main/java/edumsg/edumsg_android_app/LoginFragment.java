@@ -67,7 +67,7 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
     @Bind(R.id.sign_up_btn) Button mSignupButton;
     @BindColor(R.color.colorPrimaryDark) int cPrimDark;
 
-    private OnFragmentInteractionListener mListener;
+//    private OnFragmentInteractionListener mListener;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -115,27 +115,27 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+////        mListener = null;
+//    }
 
     @Override
     public void onClick(View v) {
@@ -279,18 +279,18 @@ public class LoginFragment extends AppCompatDialogFragment implements View.OnCli
 
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+//    /**
+//     * This interface must be implemented by activities that contain this
+//     * fragment to allow an interaction in this fragment to be communicated
+//     * to the activity and potentially other fragments contained in that
+//     * activity.
+//     * <p/>
+//     * See the Android Training lesson <a href=
+//     * "http://developer.android.com/training/basics/fragments/communicating.html"
+//     * >Communicating with Other Fragments</a> for more information.
+//     */
+//    public interface OnFragmentInteractionListener {
+//        // TODO: Update argument type and name
+//        void onFragmentInteraction(Uri uri);
+//    }
 }
